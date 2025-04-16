@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import Input from "../component/Input"
-import { useStore } from "../global_state"
+import { useStore } from "../state/global_state"
 import React from "react"
 
 type Props = {}
@@ -17,7 +17,7 @@ export default function Sign_in({ }: Props) {
     }
 
     return (
-        <div className="container bg-[#333333] min-h-fit sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-145px)] md:pt-[1vh] pt-[10vh]">
+        <div className="container bg-[#333333] min-h-fit sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[1vh] pt-[10vh]">
 
             <form onSubmit={onSubmit} className="flex flex-col rounded-2xl items-center w-max md:p-[36px] p-[20px] justify-center gap-[20px] bg-[#1B1429] m-auto">
 

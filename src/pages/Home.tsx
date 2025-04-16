@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom"
 import Orange_button from "../component/Orange_button"
-import { useStore } from "../global_state"
+import { useStore } from "../state/global_state"
 
 
 type Props = {}
 
 export default function Home({ }: Props) {
 
-  const navigate = useNavigate()
   const aftoryzationTipe = useStore((state) => state.aftorization.type)
 
 
@@ -26,7 +24,7 @@ export default function Home({ }: Props) {
 
           <div className="flex group items-center justify-center sm:justify-start sm:gap-[30px] gap-[15px] max-w-full sm:max-w-max">
 
-            <Orange_button Click={() => navigate(`/${aftoryzationTipe}`)} text="Начнём?" className="bg-[#1B1429]! py-[6px]! text-[#FFFFFF]! sm:text-[18px]! text-[16px]! font-[700] rounded-3xl! sm:px-[65px] px-[30px]" />
+            <Orange_button to={`/${aftoryzationTipe}`} text="Начнём?" className="bg-[#1B1429]! py-[6px]! text-[#FFFFFF]! sm:text-[18px]! text-[16px]! font-[700] rounded-3xl! sm:px-[65px] px-[30px]" />
             <img className="group-hover:translate-x-3.5 transition duration-300 lg:w-max sm:w-[30px] w-[20px]" src="/Home/Strelka.svg" alt="" />
 
           </div>

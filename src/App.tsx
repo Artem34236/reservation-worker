@@ -6,8 +6,11 @@ import Footer from "./component/Footer"
 import Register_Company from "./pages/Register_Company"
 import Sign_in from "./pages/Sign_in"
 import User_page from "./pages/User_page"
-import Company_page from "./pages/Company_page"
 import Worker_page from "./pages/Worker_page"
+import IsAught from "./routes/IsAught"
+import CampaniLeyout from "./layout/CampaniLeyout"
+import NotFound from "./pages/NotFound"
+import Company_page from "./pages/Company_page"
 
 type Props = {}
 
@@ -23,8 +26,16 @@ export default function App({ }: Props) {
       <Route path="/reg_com" element={<Register_Company />} />
       <Route path="/sign_in" element={<Sign_in />} />
       <Route path="user" element={<User_page />} />
-      <Route path="company" element={<Company_page />} />
-      <Route path="worker" element={<Worker_page />} />
+
+      <Route path="company" element={<IsAught type="company"><CampaniLeyout /></IsAught>} >
+        <Route path="account" element={<Company_page />} />
+      </Route>
+
+      <Route path="worker" element={<IsAught type="worker"><Worker_page /></IsAught>} >
+
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
 
     </Routes>
 

@@ -1,18 +1,7 @@
-import { useNavigate } from "react-router-dom"
-import { useStore } from "../global_state"
-import { useEffect } from "react"
 
 type Props = {}
 
 export default function Company_page({ }: Props) {
-
-    const navigate = useNavigate()
-
-    const aftoryzationTipe = useStore((state) => state.aftorization.type)
-
-    useEffect(() => {
-        aftoryzationTipe == 'company' ? null : navigate('/')
-    })
 
 
     return (

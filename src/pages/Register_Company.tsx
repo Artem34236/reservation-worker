@@ -5,7 +5,7 @@ type Props = {}
 
 export default function Register_Company({ }: Props) {
     return (
-        <div className="container min-h-fit bg-[#333333] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-145px)] md:pt-[8vh] pt-[1vh]">
+        <div className="container min-h-fit bg-[#333333] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[8vh] pt-[1vh]">
 
             <form className="flex flex-col rounded-2xl items-center w-max p-[20px] justify-center gap-[15px] bg-[#1B1429] m-auto">
 

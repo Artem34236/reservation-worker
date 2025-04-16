@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import Orange_button from "./Orange_button"
-import { useStore } from "../global_state"
+import { useStore } from "../state/global_state"
 
 type Props = {}
 
@@ -10,7 +10,7 @@ export default function Header({ }: Props) {
     const aftoryzationTipe = useStore((state) => state.aftorization.type)
 
     return (
-        <div className="container bg-[#333333] md:px-[50px] px-[20px] flex justify-between items-center nd:py-[30px] py-[20px]">
+        <div className="container z-10 bg-[#333333] md:px-[50px] px-[20px] flex justify-between items-center md:py-[30px] py-[20px] sticky top-[1px]">
             <Link to="/">
                 <img className="md:w-[150px] w-[80px]" src="/Logo.png" alt="" />
             </Link>
