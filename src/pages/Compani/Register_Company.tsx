@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
-import Input from "../component/Input"
+import Input from "../../component/Input"
+
 
 type Props = {}
 

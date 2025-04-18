@@ -2,7 +2,7 @@
 type Props = {
     img?: string
     placeholder: string
-    type?: 'text' | 'email' | 'password'
+    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'search' | 'url' | 'date' | 'time'
 }
 
 export default function Input({ img, placeholder, type }: Props) {
