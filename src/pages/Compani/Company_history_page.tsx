@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom"
 import Card, { CardTop } from "../../component/Card"
-import { Orange_Button, Orange_Link } from "../../component/Orange_button"
+import { Orange_Button } from "../../component/Orange_button"
 
 type Props = {}
 
@@ -10,25 +9,34 @@ export default function Company_history_page({ }: Props) {
     return (
         <div>
 
-            <div className="bg-[#352B48] sm:py-[14px] py-[6px] sm:px-[40px] px-[6px] ">
+            <div className="bg-[#352B48] sm:py-[14px] py-[6px] sm:px-[40px] px-[6px]">
+                <form className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
 
-                <form className="flex gap-4 lg:justify-end justify-between">
-
-                    <label className="sm:py-[12px] py-[5px] sm:px-[18px] px-[12px] border-[1px] border-[#E5E5E5] rounded-[5px]" htmlFor="asdf">
-                        <input placeholder="Начало" className="text-[#ffffff] outline-0 w-[90px]" id="asdf" type="text" />
+                    <label className="flex items-center gap-2 sm:py-[12px] py-[5px] sm:px-[18px] px-[12px] border border-[#E5E5E5] rounded-[5px]">
+                        <input
+                            placeholder="Начало (00 : 00)"
+                            className="bg-transparent text-white outline-none w-[130px]"
+                            type="text"
+                        />
                     </label>
 
-                    <label className="sm:py-[12px] py-[5px] sm:px-[18px] px-[12px] border-[1px] border-[#E5E5E5] rounded-[5px]" htmlFor="asdf">
-                        <input placeholder="Конец" className="text-[#ffffff] outline-0 w-[90px]" id="asdf" type="text" />
+                    <label className="flex items-center gap-2 sm:py-[12px] py-[5px] sm:px-[18px] px-[12px] border border-[#E5E5E5] rounded-[5px]">
+                        <input
+                            placeholder="Конец (00 : 00)"
+                            className="bg-transparent text-white outline-none w-[130px]"
+                            type="text"
+                        />
                     </label>
 
-                    <Orange_Button to="none" text="Сортировка" />
+                    <div className="w-full sm:w-auto">
+                        <Orange_Button to="none" text="Сортировка" className="w-full sm:w-auto md:p-4! p-2!" />
+                    </div>
 
                 </form>
-
             </div>
 
-            <div className="lg:p-[40px] p-[10px]">
+
+            <div className="lg:p-[40px] p-[10px] flex flex-col gap-3">
                 <div className="flex justify-between items-center border-b-[1px] border-[#E5E5E5] py-[12px]">
                     <h2 className="text-[#FFFFFF] lg:text-2xl text-[16px] font-bold">История</h2>
                 </div>

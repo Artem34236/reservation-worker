@@ -12,7 +12,7 @@ export default function Sign_in({ }: Props) {
 
     function onSubmit(event: React.FormEvent) {
         event.preventDefault()
-        aftoryzationTipe('company')
+        aftoryzationTipe('worker')
         navigate('/')
     }
 

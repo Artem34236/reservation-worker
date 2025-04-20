@@ -14,7 +14,7 @@ export default function Header({ }: Props) {
                 <img className="md:w-[150px] w-[80px]" src="/Logo.png" alt="" />
             </Link>
             {aftoryzationTipe != 'user' ?
-                <Link to={`/${aftoryzationTipe}/account`}>
+                <Link to={`/${aftoryzationTipe}/acc`}>
                     <img className="w-7 md:w-12" src="/Header/User_logo.svg" alt="" />
                 </Link>
                 : <Orange_Link to="/sign_in" text="Вход" className="md:text-[22px]" />}

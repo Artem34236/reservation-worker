@@ -17,9 +17,9 @@ export default function CampaniLeyout({ }: Props) {
                 </div>
 
                 <div className="flex lg:flex-col sm:gap-3 gap-2 items-center sm:w-full w-[236px] justify-center lg:p-4 flex-wrap">
-                    <Orange_Link to="/company/worker" text="Работники" image="/Compani/Layout/Worker.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
-                    <Orange_Link to="/company/acc" text="Акаунт" image="/Compani/Layout/Accaunt.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
-                    <Orange_Link to="/company/history" text="История" image="/Compani/Layout/History.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
+                    <Orange_Link to="worker" text="Работники" image="/Compani/Layout/Worker.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
+                    <Orange_Link to="acc" text="Акаунт" image="/Compani/Layout/Accaunt.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
+                    <Orange_Link to="history" text="История" image="/Compani/Layout/History.svg" className="text-[#FFFFFF] flex sm:gap-2 gap-1.5 items-center sm:py-3 py-2! px-2! w-max! lg:w-[148px]!" />
                 </div>
 
                 <div></div>

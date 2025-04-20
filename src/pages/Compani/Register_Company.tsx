@@ -1,14 +1,25 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Input from "../../component/Input"
+import { useStore } from "../../state/global_state"
 
 
 type Props = {}
 
 export default function Register_Company({ }: Props) {
+
+    const aftoryzationTipe = useStore((state) => state.aftorization.setIsAftorization)
+    const navigate = useNavigate()
+
+      function onSubmit(event: React.FormEvent) {
+            event.preventDefault()
+            aftoryzationTipe('company')
+            navigate('/')
+        }
+
     return (
         <div className="container min-h-fit bg-[#333333] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[8vh] pt-[1vh]">
 
-            <form className="flex flex-col rounded-2xl items-center w-max p-[20px] justify-center gap-[15px] bg-[#1B1429] m-auto">
+            <form onSubmit={onSubmit} className="flex flex-col rounded-2xl items-center w-max p-[20px] justify-center gap-[15px] bg-[#1B1429] m-auto">
 
                 <div className="flex flex-col gap-[20px] lg:flex-row max-w-[800px] flex-wrap justify-center">
 
