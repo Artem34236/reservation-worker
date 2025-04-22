@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Card, { CardTop } from "../../component/Card"
 import { Orange_Button } from "../../component/Orange_button"
+import { Link } from "react-router-dom";
 
 type Props = {}
 
@@ -57,12 +58,33 @@ export default function ReservationWorker({ }: Props) {
                 </div>
 
                 <div>
-                    <CardTop elements={['Имя', 'Номер', 'Адрес']} />
+                    <CardTop elements={['Имя', 'Номер', 'Адрес', 'Сфера']} />
                 </div>
 
-                <div className="flex flex-col gap-[20px] mr-3">
-                    <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72"]} />
-                </div>
+                <Link to={'12'}>
+                    <div className="flex flex-col gap-[20px] mr-3">
+                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
+                    </div>
+                </Link>
+
+                <Link to={'12'}>
+                    <div className="flex flex-col gap-[20px] mr-3">
+                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
+                    </div>
+                </Link>
+
+                <Link to={'12'}>
+                    <div className="flex flex-col gap-[20px] mr-3">
+                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
+                    </div>
+                </Link>
+
+                <Link to={'12'}>
+                    <div className="flex flex-col gap-[20px] mr-3">
+                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
+                    </div>
+                </Link>
+
             </div>
 
         </div>

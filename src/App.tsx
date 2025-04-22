@@ -21,6 +21,8 @@ import UserLeyout from "./layout/UserLeyout"
 import WorkerLeyout from "./layout/WorkerLeyout"
 
 import ReservationWorker from "./pages/User/ReservationWorker"
+import User_company_page from "./pages/User/User_company_page"
+import User_worker_page from "./pages/User/User_worker_page"
 
 type Props = {}
 
@@ -38,7 +40,9 @@ export default function App({ }: Props) {
       <Route path="/sign_in" element={<Sign_in />} />
 
       <Route path="/user" element={<UserLeyout />} >
-        <Route path="company" element={<ReservationWorker />} />
+        <Route path="company" element={<ReservationWorker />} />  
+        <Route path="company/:CompanyId" element={<User_company_page />} />
+        <Route path="company/:CompanyId/:WorkerId" element={<User_worker_page />} />
       </Route>
 
       <Route path="/company" element={<IsAught type="company"> <CampaniLeyout /> </IsAught>} >
