@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
 import Input from "../../component/Input"
 import { useStore } from "../../state/global_state"
+import { useState } from "react"
+import { api } from "../../axios/axios"
 
 
 type Props = {}
@@ -10,11 +12,26 @@ export default function Register_Company({ }: Props) {
     const aftoryzationTipe = useStore((state) => state.aftorization.setIsAftorization)
     const navigate = useNavigate()
 
-      function onSubmit(event: React.FormEvent) {
-            event.preventDefault()
-            aftoryzationTipe('company')
-            navigate('/')
+    const [aug, setAftorization] = useState({
+        name: "",
+        phone: "",
+        password: "",
+        password2: "",
+        industry: "",
+        address: ""
+    })
+
+    function onSubmit(event: React.FormEvent) {
+        event.preventDefault()
+        console.log(aug);
+        
+        const registrationData = {
+            ...aug,
+            username: aug.phone
         }
+        
+        api.post("http://127.0.0.1:8000/api/v1/register/company/", registrationData)
+    }
 
     return (
         <div className="container min-h-fit bg-[#333333] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[8vh] pt-[1vh]">
@@ -23,21 +40,21 @@ export default function Register_Company({ }: Props) {
 
                 <div className="flex flex-col gap-[20px] lg:flex-row max-w-[800px] flex-wrap justify-center">
 
-                    <Input img="/Register/Name.svg" placeholder="Название компании" type="text" />
-                    <Input img="/Register/Phone.svg" placeholder="Номер" type="text" />
-                    <Input img="/Register/Pass.svg" placeholder="Пароль" type="text" />
-                    <Input img="/Register/Pass.svg" placeholder="Повторить пароль" type="text" />
-                    <Input img="/Register/Work_type.svg" placeholder="Сфера деятельности" type="text" />
-                    <Input img="/Register/Location.svg" placeholder="Адрес" type="text" />
+                    <Input value={aug.name} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, name: ev.target.value }))} img="/Register/Name.svg" placeholder="Название компании" type="text" />
+                    <Input value={aug.phone} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, phone: ev.target.value }))} img="/Register/Phone.svg" placeholder="Номер" type="text" />
+                    <Input value={aug.password} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password: ev.target.value }))} img="/Register/Pass.svg" placeholder="Пароль" type="text" />
+                    <Input value={aug.password2} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password2: ev.target.value }))} img="/Register/Pass.svg" placeholder="Повторить пароль" type="text" />
+                    <Input value={aug.industry} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, industry: ev.target.value }))} img="/Register/Work_type.svg" placeholder="Сфера деятельности" type="text" />
+                    <Input value={aug.address} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, address: ev.target.value }))} img="/Register/Location.svg" placeholder="Адрес" type="text" />
 
                 </div>
 
                 <label className="inline-flex w-full justify-between items-center cursor-pointer">
-                    
+
                     <input type="checkbox" value="" className="sr-only peer" />
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Запомнить меня</span>
                     <div className="relative w-11 h-6 peer-focus:outline-none peer-focus:ring-4  dark:peer-focus:ring-[#1B1429] rounded-full peer dark:bg-[#FFFFFF] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-[#352B48] after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-[#352B48] after:border-[#352B48] after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-[#E29038]"></div>
-                
+
                 </label>
 
                 <button className="bg-[#E29038] mt-5 cursor-pointer text-white w-full md:py-[10px] py-[10px] md:text-[18px] text-[14px] md:rounded-3xl rounded-[10px]">Зарегистрироваться</button>

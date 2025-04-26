@@ -47,7 +47,7 @@ export default function App({ }: Props) {
 
       <Route path="/company" element={<IsAught type="company"> <CampaniLeyout /> </IsAught>} >
         <Route path="worker" element={<Company_worker_page />} />
-        <Route path="worker/create" element={<Register_worker />} />
+        <Route path="create" element={<Register_worker />} />
         <Route path="history" element={<Company_history_page />} />
         <Route path="acc" element={<Compani_acc />} />
       </Route>

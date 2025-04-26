@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
 import P_H3_Link from "../../component/P_H3_Link"
+import User_workerModalWindow from "../../component/User_workerModalWindow"
 
 type Props = {}
 
 export default function User_worker_page({ }: Props) {
+
+    const [worker, setWorker] = useState({
+        id: 0,
+        company_Id: 0,
+        time: "",
+        isOnclick: false,
+    })
 
     return (
         <div className="lg:px-[20px] rounded-[20px]">
@@ -51,7 +59,15 @@ export default function User_worker_page({ }: Props) {
 
                             {[...Array(10)].map((_, index) => (
 
-                                <div key={index} className="cursor-pointer lg:w-[50px] w-[40px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9]">
+                                <div
+                                    onClick={() => setWorker({
+                                        id: 0,
+                                        company_Id: 0,
+                                        isOnclick: true,
+                                        time: "12:00 - 22:00"
+                                    })}
+                                    key={index}
+                                    className="cursor-pointer lg:w-[50px] w-[40px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9]">
                                     <p className="group-hover:text-white duration-300 transition-all lg:text-[16px] text-[14px] font-[700] text-[#000]">
                                         12:00 - 22:00
                                     </p>
@@ -68,6 +84,8 @@ export default function User_worker_page({ }: Props) {
                 </div>
 
             </div>
+
+            {worker.isOnclick && <User_workerModalWindow closseModal={() => setWorker((prew) => ({ ...prew, isOnclick: false }))} />}
 
         </div>
     )
