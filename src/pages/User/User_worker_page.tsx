@@ -1,6 +1,6 @@
 import { useState } from "react"
 import P_H3_Link from "../../component/P_H3_Link"
-import User_workerModalWindow from "../../component/User_workerModalWindow"
+import User_workerModalWindow from "../../modalWindows/User_workerModalWindow"
 
 type Props = {}
 
@@ -35,9 +35,9 @@ export default function User_worker_page({ }: Props) {
                 </div>
             </div>
 
-            <div className="xl:mt-[40px] sm:mt-[20px] xl:h-[calc(100vh-370px)] lg:h-[calc(100vh-296px)] flex flex-col sm:flex-row sm:gap-[28px] gap-[10px] p-[10px] sm:pb-[0] pb-[40px]">
+            <div className="mt-[10px] flex flex-col sm:flex-row sm:gap-[28px] gap-[10px] p-[10px] sm:pb-[0] pb-[40px]">
 
-                <div className="flex flex-col bg-[#352B48] w-full sm:w-max xl:p-[40px] p-[20px] h-full gap-3 mx-auto lg:mx-0">
+                <div className="flex flex-col bg-[#352B48] w-full sm:w-max xl:p-[40px] p-[20px] gap-3 mx-auto lg:mx-0">
                     <div className="mx-auto">
                         <p className="text-white xl:text-[24px] text-[18px] font-[700]">Работает с <span className="text-[#F4631A]">8:00</span>, до <span className="text-[#F4631A]">12:20</span></p>
 
@@ -47,37 +47,33 @@ export default function User_worker_page({ }: Props) {
                     </div>
                 </div>
 
-                <div className="bg-[#352B48] xl:p-[40px] sm:p-[20px] flex-1 flex flex-col lg:gap-[200px] gap-[50px] p-[10px]">
+                <div className="bg-[#352B48] xl:p-[40px] sm:p-[20px] flex-1 flex flex-col lg:gap-[100px] gap-[50px] p-[10px]">
 
                     <h2 className="text-white xl:text-[40px] lg:text-[30px] text-[25px] font-[700]">Выберите время:</h2>
 
-                    <div className="flex items-center justify-center sm:gap-[38px] gap-[15px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-[20px] lg:gap-[38px]">
 
-                        <p className="text-white xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">Начало</p>
+                        <p className="text-white text-center sm:text-left xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">
+                            Начало
+                        </p>
 
-                        <div className="flex sm:gap-[15px] gap-[10px] flex-wrap">
-
+                        <div className="flex flex-wrap justify-center sm:justify-start lg:gap-[10px] gap-[6px]">
                             {[...Array(10)].map((_, index) => (
-
                                 <div
-                                    onClick={() => setWorker({
-                                        id: 0,
-                                        company_Id: 0,
-                                        isOnclick: true,
-                                        time: "12:00 - 22:00"
-                                    })}
+                                    onClick={() => setWorker({ id: 0, company_Id: 0, isOnclick: true, time: "12:00 - 22:00" })}
                                     key={index}
-                                    className="cursor-pointer lg:w-[50px] w-[40px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9]">
-                                    <p className="group-hover:text-white duration-300 transition-all lg:text-[16px] text-[14px] font-[700] text-[#000]">
-                                        12:00 - 22:00
+                                    className="cursor-pointer lg:w-[80px] w-[60px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9] py-2"
+                                >
+                                    <p className="group-hover:text-white duration-300 transition-all lg:text-[14px] text-[12px] font-[700] text-[#000]">
+                                        12:00
                                     </p>
                                 </div>
-
                             ))}
-
                         </div>
 
-                        <p className="text-white xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">Конец</p>
+                        <p className="text-white text-center sm:text-left xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">
+                            Конец
+                        </p>
 
                     </div>
 

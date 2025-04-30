@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react"
-import Input from "./Input"
+
 import useNoScroll from "../hooks/useNoScroll.ts"
+import Input from "../component/Input.tsx"
 
 
 type Props = {

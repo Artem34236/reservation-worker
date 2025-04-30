@@ -1,8 +1,8 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Input from "../../component/Input"
 import { useStore } from "../../state/global_state"
 import { useState } from "react"
-import { api } from "../../axios/axios"
+import { API } from "../../axios/axios"
 
 
 type Props = {}
@@ -10,27 +10,37 @@ type Props = {}
 export default function Register_Company({ }: Props) {
 
     const aftoryzationTipe = useStore((state) => state.aftorization.setIsAftorization)
-    const navigate = useNavigate()
+
+    // const navigate = useNavigate()
 
     const [aug, setAftorization] = useState({
+        username: '',
         name: "",
         phone: "",
         password: "",
         password2: "",
-        industry: "",
+        industry: '',
         address: ""
     })
 
     function onSubmit(event: React.FormEvent) {
         event.preventDefault()
-        console.log(aug);
-        
-        const registrationData = {
-            ...aug,
-            username: aug.phone
-        }
-        
-        api.post("http://127.0.0.1:8000/api/v1/register/company/", registrationData)
+
+        API.post("/register/company/", aug)
+            .then(a => console.log(a.data))
+
+        setAftorization({
+            username: '',
+            name: "",
+            phone: "",
+            password: "",
+            password2: "",
+            industry: '',
+            address: ""
+        })
+
+        aftoryzationTipe('company')
+
     }
 
     return (
@@ -40,12 +50,73 @@ export default function Register_Company({ }: Props) {
 
                 <div className="flex flex-col gap-[20px] lg:flex-row max-w-[800px] flex-wrap justify-center">
 
-                    <Input value={aug.name} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, name: ev.target.value }))} img="/Register/Name.svg" placeholder="Название компании" type="text" />
-                    <Input value={aug.phone} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, phone: ev.target.value }))} img="/Register/Phone.svg" placeholder="Номер" type="text" />
-                    <Input value={aug.password} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password: ev.target.value }))} img="/Register/Pass.svg" placeholder="Пароль" type="text" />
-                    <Input value={aug.password2} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password2: ev.target.value }))} img="/Register/Pass.svg" placeholder="Повторить пароль" type="text" />
-                    <Input value={aug.industry} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, industry: ev.target.value }))} img="/Register/Work_type.svg" placeholder="Сфера деятельности" type="text" />
-                    <Input value={aug.address} onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, address: ev.target.value }))} img="/Register/Location.svg" placeholder="Адрес" type="text" />
+                    <Input
+                        isRequired={true}
+                        value={aug.name}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, name: ev.target.value }))}
+                        img="/Register/Name.svg"
+                        placeholder="Логин (en)"
+                        type="text"
+                    />
+
+                    <Input
+                        isRequired={true}
+                        value={aug.username}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, username: ev.target.value }))}
+                        img="/Register/Name.svg"
+                        placeholder="Название компании"
+                        type="text"
+                    />
+
+                    <Input
+                        isRequired={true}
+                        value={aug.phone}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, phone: ev.target.value }))}
+                        img="/Register/Phone.svg"
+                        placeholder="Номер"
+                        type="text"
+                    />
+
+                    <Input
+                        isRequired={true}
+                        value={aug.password}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password: ev.target.value }))}
+                        img="/Register/Pass.svg"
+                        placeholder="Пароль"
+                        type="text"
+                    />
+
+                    <Input
+                        isRequired={true}
+                        value={aug.password2}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password2: ev.target.value }))}
+                        img="/Register/Pass.svg"
+                        placeholder="Повторить пароль"
+                        type="text"
+                    />
+
+                    <select
+                        required
+                        value={aug.industry.toString()}
+                        onChange={(ev: React.ChangeEvent<HTMLSelectElement>) => setAftorization(prev => ({ ...prev, industry: ev.target.value }))}
+                        className="bg-[#3A2E4D] text-white outline-0 rounded-3xl px-4 py-3 w-full sm:w-[345px]"
+                    >
+                        <option value="" disabled hidden>
+                            Сфера деятельности
+                        </option>
+                        <option value="1">Медицина</option>
+                        <option value="2">IT</option>
+                        <option value="3">фываыфва</option>
+                    </select>
+
+                    <Input
+                        isRequired={true}
+                        value={aug.address}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, address: ev.target.value }))}
+                        img="/Register/Location.svg"
+                        placeholder="Адрес"
+                        type="text"
+                    />
 
                 </div>
 

@@ -1,39 +1,87 @@
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import P_H3_Link from "../../component/P_H3_Link"
 import Card, { CardTop } from "../../component/Card"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Orange_Button } from "../../component/Orange_button";
+import { API } from "../../axios/axios";
+import { Company, Worker } from "../../types/type";
+import { User_company_page_top } from "../../Skeleton/User_company_page_top";
+import { CardSkeleton } from "../../Skeleton/CardSkeleton";
 
 type Props = {}
 
 export default function User_company_page({ }: Props) {
 
-   const [sphere, setSphere] = useState("");
-  
-      const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-          setSphere(e.target.value);
-      };
+  const [sphere, setSphere] = useState("");
+  const [company, setCompany] = useState<Company | null>(null)
+  const [workers, setWorkers] = useState<Worker[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const { CompanyId } = useParams<{ CompanyId: string }>();
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSphere(e.target.value);
+  };
+
+  const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+
+  useEffect(() => {
+
+    if (!CompanyId) return
+
+    async function getCompanys() {
+
+      setIsLoading(true)
+
+      await API.get('/companies/')
+        .then((data) => {
+          const foundCompany = data.data.find((item: Company) => item.id.toString() == CompanyId);
+          setCompany(foundCompany || null);
+        })
+        .catch((err) => console.log('Ошибка загрузки компаний', err))
+
+      await API.get(`/companies/${CompanyId}/workers`)
+        .then((data) => {
+          setWorkers(data.data)
+        })
+        .catch((err) => console.log('Ошибка загрузки Работников', err))
+        .finally(() => setIsLoading(false))
+
+    }
+
+    getCompanys()
+
+  }, [CompanyId])
+
+
 
   return (
     <div className="lg:px-[20px] rounded-[20px]">
       <div className="bg-[#352B48] sg:p-[40px] p-[10px] sm:p-[15px]">
 
-        <div className="flex gap-[40px] lg:items-start items-center justify-between sm:flex-row flex-col">
+        {!isLoading ?
+          <div className="flex gap-[40px] lg:items-start items-center justify-between sm:flex-row flex-col">
 
-          <div className="flex flex-col items-center max-w-[216px] gap-8" >
+            <div className="flex flex-col items-center max-w-[216px] gap-8" >
 
-            <img className="xl:min-w-[200px] sm:min-w-[140px] min-w-[120px] w-[120px]" src="/Compani/BaseIcon.svg" alt="" />
+              <img className="xl:min-w-[200px] sm:min-w-[140px] min-w-[120px] w-[120px]" src="/Compani/BaseIcon.svg" alt="" />
+
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
+              <P_H3_Link isEdit={false} p="Имя" h3={company?.name || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Номер" h3={company?.phone || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Адрес" h3={company?.address || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Сфера деятельности" h3={"Пока не работает"} link={'none'} />
+            </div>
 
           </div>
+          :
+          <User_company_page_top />}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
-            <P_H3_Link isEdit={false} p="Имя" h3="Сucumber Cumcumich" link={'/edit'} />
-            <P_H3_Link isEdit={false} p="Почта" h3="asdada@gmail.com" link={'/edit'} />
-            <P_H3_Link isEdit={false} p="Адрес" h3="Гп Айтиева 72" link={'/edit'} />
-            <P_H3_Link isEdit={false} p="Сфера деятельности" h3="Медицина" link={'/edit'} />
-          </div>
-
-        </div>
       </div>
 
       <div className="lg:p-[40px] p-[10px] flex flex-col gap-3">
@@ -52,6 +100,8 @@ export default function User_company_page({ }: Props) {
                 htmlFor="asdf"
               >
                 <input
+                  value={searchInput}
+                  onChange={handleChangeSearchInput}
                   placeholder="Поиск..."
                   className="text-[#ffffff] outline-0 w-full"
                   id="asdf"
@@ -84,14 +134,25 @@ export default function User_company_page({ }: Props) {
         </div>
 
         <div>
-          <CardTop elements={['Имя', 'Номер', 'Должность','Время начала приёма']} />
+          <CardTop elements={['Имя', 'Номер', 'Должность', 'Время начала приёма']} />
         </div>
 
-        <div className="flex flex-col gap-[20px] mr-3">
-          <Link to="/user/company/12/12" className="w-full">
-            <Card elements={['Вичеслав', "+7 555 555 555", "Стоматолог",'08:30']} />
-          </Link>
-        </div>
+        {!isLoading ?
+          workers.filter((item) => item.full_name.toLowerCase().includes(searchInput)).map((item, index) => (
+            <Link key={index} to={`${item.id}`}>
+              <div className="flex flex-col gap-[20px] mr-3">
+                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, '+555 555 555', item.profession, '8:30']} />
+              </div>
+            </Link>
+          ))
+          :
+          [...Array(4)].map((_, index) => (
+            <div key={index} className="flex flex-col gap-[20px] mr-3">
+              <CardSkeleton />
+            </div>
+          ))
+        }
+
       </div>
 
     </div>

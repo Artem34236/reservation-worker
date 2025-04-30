@@ -1,17 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card, { CardTop } from "../../component/Card"
 import { Orange_Button } from "../../component/Orange_button"
 import { Link } from "react-router-dom";
+import { API } from "../../axios/axios";
+import { Company } from "../../types/type";
+import { CardSkeleton } from "../../Skeleton/CardSkeleton";
 
 type Props = {}
 
 export default function ReservationWorker({ }: Props) {
 
     const [sphere, setSphere] = useState("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [searchInput, setSearchInput] = useState<string>("");
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSphere(e.target.value);
     };
+
+    const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchInput(e.target.value);
+    };
+
+    const [companys, setCompanys] = useState<Company[]>([])
+
+    useEffect(() => {
+
+        async function getCompanys() {
+            setIsLoading(true)
+            await API.get('/companies/')
+                .then((data) => setCompanys(data.data))
+                .catch((err) => console.log('Ошибка загрузки компаний', err))
+                .finally(() => setIsLoading(false))
+        }
+        getCompanys()
+
+    }, [])
 
     return (
         <div>
@@ -24,6 +48,8 @@ export default function ReservationWorker({ }: Props) {
                         htmlFor="asdf"
                     >
                         <input
+                            value={searchInput}
+                            onChange={handleChangeSearchInput}
                             placeholder="Поиск..."
                             className="text-[#ffffff] outline-0 w-full bg-transparent"
                             id="asdf"
@@ -61,29 +87,22 @@ export default function ReservationWorker({ }: Props) {
                     <CardTop elements={['Имя', 'Номер', 'Адрес', 'Сфера']} />
                 </div>
 
-                <Link to={'12'}>
-                    <div className="flex flex-col gap-[20px] mr-3">
-                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
-                    </div>
-                </Link>
 
-                <Link to={'12'}>
-                    <div className="flex flex-col gap-[20px] mr-3">
-                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
-                    </div>
-                </Link>
-
-                <Link to={'12'}>
-                    <div className="flex flex-col gap-[20px] mr-3">
-                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
-                    </div>
-                </Link>
-
-                <Link to={'12'}>
-                    <div className="flex flex-col gap-[20px] mr-3">
-                        <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={['Компания: ooo “ТМЫВДЕНЕГ”', "+7 555 555 555", "Гп Айтиева / 72", 'Медицина']} />
-                    </div>
-                </Link>
+                {!isLoading ?
+                    companys.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
+                        <Link key={index} to={`${item.id}`}>
+                            <div className="flex flex-col gap-[20px] mr-3">
+                                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, 'Пока чо не рабоатет']} />
+                            </div>
+                        </Link>
+                    ))
+                    :
+                    [...Array(4)].map((_, index) => (
+                        <div key={index} className="flex flex-col gap-[20px] mr-3">
+                            <CardSkeleton />
+                        </div>
+                    ))
+                }
 
             </div>
 

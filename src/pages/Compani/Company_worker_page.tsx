@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom"
 import Card, { CardTop } from "../../component/Card"
-import { Orange_Button, Orange_Link } from "../../component/Orange_button"
+import { Orange_Button } from "../../component/Orange_button"
+import { useState } from "react"
+import Company_newWorkerModalWindow from "../../modalWindows/Company_newWorkerModalWindow"
 
 type Props = {}
 
 export default function Company_worker_page({ }: Props) {
 
+    const [worker, setWorker] = useState({
+        isOnclick: false,
+    })
 
     return (
         <div>
@@ -36,7 +41,7 @@ export default function Company_worker_page({ }: Props) {
             <div className="lg:p-[40px] p-[10px]">
                 <div className="flex justify-between items-center border-b-[1px] border-[#E5E5E5] py-[12px]">
                     <h2 className="text-[#FFFFFF] lg:text-2xl text-[16px] font-bold">Список работников</h2>
-                    <Orange_Link className="w-[180px]! py-[10px]" text="Добавить работника" to="/company/worker/create" />
+                    <Orange_Button onClick={() => setWorker((prew) => ({...prew, isOnclick:true}))} className="w-[180px]! py-[10px]" text="Добавить работника" to="none" />
                 </div>
 
                 <div>
@@ -61,6 +66,8 @@ export default function Company_worker_page({ }: Props) {
 
                 </div>
             </div>
+
+            {worker.isOnclick && <Company_newWorkerModalWindow closseModal={() => setWorker((prew) => ({ ...prew, isOnclick: false }))} />}
 
         </div>
 

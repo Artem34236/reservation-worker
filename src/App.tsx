@@ -5,7 +5,7 @@ import Header from "./component/Header"
 import Footer from "./component/Footer"
 import Register_Company from "./pages/Compani/Register_Company"
 import Sign_in from "./pages/Sign_in"
-import IsAught from "./routes/IsAught"
+import IsAught from "./hooks/IsAught"
 import NotFound from "./pages/NotFound"
 
 import Company_worker_page from "./pages/Compani/Company_worker_page"
