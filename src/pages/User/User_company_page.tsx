@@ -4,7 +4,7 @@ import Card, { CardTop } from "../../component/Card"
 import { useEffect, useState } from "react";
 import { Orange_Button } from "../../component/Orange_button";
 import { API } from "../../axios/axios";
-import { Company, Worker } from "../../types/type";
+import { Companys, Workers } from "../../types/type";
 import { User_company_page_top } from "../../Skeleton/User_company_page_top";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
 
@@ -13,8 +13,8 @@ type Props = {}
 export default function User_company_page({ }: Props) {
 
   const [sphere, setSphere] = useState("");
-  const [company, setCompany] = useState<Company | null>(null)
-  const [workers, setWorkers] = useState<Worker[]>([])
+  const [company, setCompany] = useState<Companys | null>(null)
+  const [workers, setWorkers] = useState<Workers | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const { CompanyId } = useParams<{ CompanyId: string }>();
@@ -36,18 +36,17 @@ export default function User_company_page({ }: Props) {
 
       setIsLoading(true)
 
-      await API.get('/companies/')
-        .then((data) => {
-          const foundCompany = data.data.find((item: Company) => item.id.toString() == CompanyId);
-          setCompany(foundCompany || null);
-        })
-        .catch((err) => console.log('Ошибка загрузки компаний', err))
-
       await API.get(`/companies/${CompanyId}/workers`)
         .then((data) => {
           setWorkers(data.data)
         })
         .catch((err) => console.log('Ошибка загрузки Работников', err))
+
+      await API.get(`/companies/?id=${CompanyId}`)
+        .then((data) => {
+          setCompany(data.data)
+        })
+        .catch((err) => console.log('Ошибка загрузки компании', err))
         .finally(() => setIsLoading(false))
 
     }
@@ -72,9 +71,9 @@ export default function User_company_page({ }: Props) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
-              <P_H3_Link isEdit={false} p="Имя" h3={company?.name || ''} link={'none'} />
-              <P_H3_Link isEdit={false} p="Номер" h3={company?.phone || ''} link={'none'} />
-              <P_H3_Link isEdit={false} p="Адрес" h3={company?.address || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Имя" h3={company?.results[0].name || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Номер" h3={company?.results[0].phone || ''} link={'none'} />
+              <P_H3_Link isEdit={false} p="Адрес" h3={company?.results[0].address || ''} link={'none'} />
               <P_H3_Link isEdit={false} p="Сфера деятельности" h3={"Пока не работает"} link={'none'} />
             </div>
 
@@ -138,8 +137,8 @@ export default function User_company_page({ }: Props) {
         </div>
 
         {!isLoading ?
-          workers.filter((item) => item.full_name.toLowerCase().includes(searchInput)).map((item, index) => (
-            <Link key={index} to={`${item.id}`}>
+          workers?.results.filter((item) => item.full_name.toLowerCase().includes(searchInput)).map((item, index) => (
+            <Link key={index} to={`${item.id}/?search=${item.full_name}`}>
               <div className="flex flex-col gap-[20px] mr-3">
                 <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, '+555 555 555', item.profession, '8:30']} />
               </div>

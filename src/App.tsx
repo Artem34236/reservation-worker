@@ -7,6 +7,7 @@ import Register_Company from "./pages/Compani/Register_Company"
 import Sign_in from "./pages/Sign_in"
 import IsAught from "./hooks/IsAught"
 import NotFound from "./pages/NotFound"
+import useScrollToTop from "./hooks/useScrollTop"
 
 import Company_worker_page from "./pages/Compani/Company_worker_page"
 import Compani_acc from "./pages/Compani/Account"
@@ -27,6 +28,8 @@ import User_worker_page from "./pages/User/User_worker_page"
 type Props = {}
 
 export default function App({ }: Props) {
+
+  useScrollToTop()
 
   return (<>
 

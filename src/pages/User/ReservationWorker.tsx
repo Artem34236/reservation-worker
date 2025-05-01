@@ -3,7 +3,7 @@ import Card, { CardTop } from "../../component/Card"
 import { Orange_Button } from "../../component/Orange_button"
 import { Link } from "react-router-dom";
 import { API } from "../../axios/axios";
-import { Company } from "../../types/type";
+import { Company, Companys } from "../../types/type";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
 
 type Props = {}
@@ -13,6 +13,8 @@ export default function ReservationWorker({ }: Props) {
     const [sphere, setSphere] = useState("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
+    const [companys, setCompanys] = useState<Companys | null>(null)
+
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSphere(e.target.value);
@@ -21,17 +23,19 @@ export default function ReservationWorker({ }: Props) {
     const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
     };
-
-    const [companys, setCompanys] = useState<Company[]>([])
+    
 
     useEffect(() => {
 
         async function getCompanys() {
+
             setIsLoading(true)
+
             await API.get('/companies/')
                 .then((data) => setCompanys(data.data))
                 .catch((err) => console.log('Ошибка загрузки компаний', err))
                 .finally(() => setIsLoading(false))
+
         }
         getCompanys()
 
@@ -89,7 +93,7 @@ export default function ReservationWorker({ }: Props) {
 
 
                 {!isLoading ?
-                    companys.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
+                    companys?.results.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
                         <Link key={index} to={`${item.id}`}>
                             <div className="flex flex-col gap-[20px] mr-3">
                                 <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, 'Пока чо не рабоатет']} />

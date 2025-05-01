@@ -45,7 +45,7 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
             <form onSubmit={onSubmit} className="flex flex-col rounded-2xl items-center w-max p-[20px] justify-center gap-[15px] bg-[#1B1429] m-auto">
 
                 <div className="flex w-full justify-end">
-                    <button className="cursor-pointer" onClick={closseModal}>
+                    <button className="cursor-pointer" type="button" onClick={closseModal}>
                         <img className="w-[32px]" src="/User/Modal/Exit.svg" alt="" />
                     </button>
                 </div>
