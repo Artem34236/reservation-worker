@@ -37,7 +37,7 @@ export default function App({ }: Props) {
 
     <Routes>
 
-      <Route path="/" element={<Home />} />y
+      <Route path="/" element={<Home />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/reg_com" element={<Register_Company />} />
       <Route path="/sign_in" element={<Sign_in />} />

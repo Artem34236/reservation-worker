@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import P_H3_Link from "../../component/P_H3_Link"
 import Card, { CardTop } from "../../component/Card"
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ export default function User_company_page({ }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const { CompanyId } = useParams<{ CompanyId: string }>();
+  const [search, setSearch] = useSearchParams()
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSphere(e.target.value);
@@ -36,7 +37,7 @@ export default function User_company_page({ }: Props) {
 
       setIsLoading(true)
 
-      await API.get(`/companies/${CompanyId}/workers`)
+      await API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`)
         .then((data) => {
           setWorkers(data.data)
         })
@@ -55,6 +56,16 @@ export default function User_company_page({ }: Props) {
 
   }, [CompanyId])
 
+
+  function handlePage(apiUrl: string) {
+
+    const url = new URL(apiUrl)
+    const page = url.searchParams.get('page') || '1'
+
+    setSearch(prev => (
+      { ...prev, page: page }
+    ))
+  }
 
 
   return (
@@ -153,6 +164,11 @@ export default function User_company_page({ }: Props) {
         }
 
       </div>
+
+      {!isLoading && <div className="flex items-center justify-center gap-[20px]">
+        {workers?.previous ? <img width={32} onClick={() => handlePage(workers?.previous || "")} className="cursor-pointer" src="/Pagination/left.svg" alt="" /> : <img width={32} src="/Pagination/noLeft.svg" alt="" />}
+        {workers?.next ? <img width={32} onClick={() => handlePage(workers?.next || "")} className="cursor-pointer" src="/Pagination/right.svg" alt="" /> : <img width={32} src="/Pagination/noRight.svg" alt="" />}
+      </div>}
 
     </div>
   )

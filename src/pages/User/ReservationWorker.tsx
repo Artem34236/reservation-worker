@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Card, { CardTop } from "../../component/Card"
 import { Orange_Button } from "../../component/Orange_button"
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { API } from "../../axios/axios";
-import { Company, Companys } from "../../types/type";
+import { Companys } from "../../types/type";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
 
 type Props = {}
@@ -14,6 +14,7 @@ export default function ReservationWorker({ }: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
     const [companys, setCompanys] = useState<Companys | null>(null)
+    const [search, setSearch] = useSearchParams()
 
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -23,7 +24,7 @@ export default function ReservationWorker({ }: Props) {
     const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
     };
-    
+
 
     useEffect(() => {
 
@@ -31,15 +32,27 @@ export default function ReservationWorker({ }: Props) {
 
             setIsLoading(true)
 
-            await API.get('/companies/')
-                .then((data) => setCompanys(data.data))
+            await API.get(`/companies/?page=${search.get('page') || 1}`)
+                .then((data) => {
+                    setCompanys(data.data)
+                })
                 .catch((err) => console.log('Ошибка загрузки компаний', err))
                 .finally(() => setIsLoading(false))
 
         }
         getCompanys()
 
-    }, [])
+    }, [search])
+
+    function handlePage(apiUrl: string) {
+
+        const url = new URL(apiUrl)
+        const page = url.searchParams.get('page') || '1'
+
+        setSearch(prev => (
+            { ...prev, page: page }
+        ))
+    }
 
     return (
         <div>
@@ -82,7 +95,7 @@ export default function ReservationWorker({ }: Props) {
                 </form>
             </div>
 
-            <div className="lg:p-[40px] p-[10px] flex flex-col gap-3">
+            <div className="lg:p-[40px] p-[10px] flex flex-col gap-3 min-h-[calc(100vh-100px)]">
                 <div className="flex justify-between items-center border-b-[1px] border-[#E5E5E5] py-[12px]">
                     <h2 className="text-[#FFFFFF] lg:text-2xl text-[16px] font-bold">Компании</h2>
                 </div>
@@ -90,7 +103,6 @@ export default function ReservationWorker({ }: Props) {
                 <div>
                     <CardTop elements={['Имя', 'Номер', 'Адрес', 'Сфера']} />
                 </div>
-
 
                 {!isLoading ?
                     companys?.results.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
@@ -110,7 +122,12 @@ export default function ReservationWorker({ }: Props) {
 
             </div>
 
-        </div>
+            {!isLoading && <div className="flex items-center justify-center gap-[20px]">
+                {companys?.previous ? <img width={32} onClick={() => handlePage(companys?.previous || "")} className="cursor-pointer" src="/Pagination/left.svg" alt="" /> : <img width={32} src="/Pagination/noLeft.svg" alt="" />}
+                {companys?.next ? <img width={32} onClick={() => handlePage(companys?.next || "")} className="cursor-pointer" src="/Pagination/right.svg" alt="" /> : <img width={32} src="/Pagination/noRight.svg" alt="" />}
+            </div>}
+
+        </div >
 
     )
 }
