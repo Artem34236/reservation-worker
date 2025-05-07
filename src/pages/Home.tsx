@@ -13,7 +13,7 @@ export default function Home({ }: Props) {
   return (
     <div className="container flex sm:flex-row flex-col-reverse">
 
-      <div className="flex min-h-fit sm:min-h-full justify-center items-center sm:w-[50%] bg-[#F4631A] p-[20px] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-204px)] h-[calc(50vh-68px)]">
+      <div className="flex min-h-fit sm:min-h-full justify-center items-center sm:w-[50%] bg-[#F4631A] p-[20px] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(50vh-68px)]">
         <div>
 
           <h1 className="lg:text-[46px] sm:text-[32px] text-[22px] font-[700] text-[#1B1429] sm:mb-[28px] ">О нас:</h1>
@@ -32,7 +32,7 @@ export default function Home({ }: Props) {
         </div>
       </div>
 
-      <div className=" flex min-h-fit sm:min-h-full items-center justify-center sm:w-[50%] flex-col bg-[#333333] gap-[10px] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-204px)] h-[calc(50vh-68px)] p-[20px]">
+      <div className=" flex min-h-fit sm:min-h-full items-center justify-center sm:w-[50%] flex-col bg-[#333333] gap-[10px] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(50vh-68px)] p-[20px]">
 
         <h1 className="2xl:text-[52px] lg:text-[50px] sm:text-[35px] text-[28px] font-[700] text-[#FFFFFF]">Время - деньги</h1>
 

@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react"
 import P_H3_Link from "../../component/P_H3_Link"
 import User_workerModalWindow from "../../modalWindows/User_workerModalWindow"
-import { useParams, useSearchParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { API } from "../../axios/axios"
-import { Companys, Workers } from "../../types/type"
+import { Companys, Worker } from "../../types/type"
 import User_worker_page_skeleton from "../../Skeleton/User_worker_page_skeleton"
 
 type Props = {}
 
 export default function User_worker_page({ }: Props) {
 
-    const [search, setSearch] = useSearchParams()
-    const [worker, setWorker] = useState<Workers | null>(null)
+    const [worker, setWorker] = useState<Worker | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [company, setCompany] = useState<Companys | null>(null)
-    const { CompanyId } = useParams<{ CompanyId: string }>();
+    const { CompanyId, WorkerId } = useParams<{ CompanyId: string, WorkerId: string }>();
     const [time, setTime] = useState({
         id: 0,
         company_Id: 0,
@@ -36,7 +35,7 @@ export default function User_worker_page({ }: Props) {
                 })
                 .catch((err) => console.log('Ошибка загрузки компании', err))
 
-            await API.get(`/companies/${CompanyId}/workers/?search=${search.get('search')}`)
+            await API.get(`/workers/${WorkerId}/`)
                 .then((data) => {
                     setWorker(data.data)
                 })
@@ -47,7 +46,7 @@ export default function User_worker_page({ }: Props) {
 
         getCompanys()
 
-    }, [CompanyId])
+    }, [CompanyId, WorkerId])
 
 
 
@@ -66,24 +65,22 @@ export default function User_worker_page({ }: Props) {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
-                            <P_H3_Link isEdit={false} p="Имя" h3={worker?.results[0].full_name || ''} link={'/edit'} />
-                            <P_H3_Link isEdit={false} p="Номер" h3="+ 7 555 555 555" link={'/edit'} />
-                            <P_H3_Link isEdit={false} p="Профессия" h3={worker?.results[0].profession || ''} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Имя" h3={worker?.full_name || ''} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Номер" h3={worker?.phone || ''} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Профессия" h3={worker?.profession || ''} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Компания" h3={company?.results[0].name || ''} link={'/edit'} />
                         </div>
 
                     </div>
                 </div>
 
-                <div className="mt-[10px] flex flex-col sm:flex-row sm:gap-[28px] gap-[10px] p-[10px] sm:pb-[0] pb-[40px]">
+                <div className="mt-[10px] flex flex-col sm:flex-row sm:gap-[28px] gap-[10px] py-[10px] sm:pb-[0] pb-[40px]">
 
                     <div className="flex flex-col bg-[#352B48] w-full sm:w-max xl:p-[40px] p-[20px] gap-3 mx-auto lg:mx-0">
                         <div className="mx-auto">
-                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Работает с <span className="text-[#F4631A]">8:00</span>, до <span className="text-[#F4631A]">12:20</span></p>
+                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Работает с <span className="text-[#F4631A]">{worker?.work_start.slice(0, 5)}</span>, до <span className="text-[#F4631A]">16:00</span></p>
 
-                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Свободных мест:  <span className="text-[#F4631A]">8</span></p>
-
-                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Сеанс длится:  <span className="text-[#F4631A]">20 мин</span></p>
+                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Сеанс длится:  <span className="text-[#F4631A]">{worker?.client_duration_minutes}</span> минут </p>
                         </div>
                     </div>
 

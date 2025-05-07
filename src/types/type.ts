@@ -11,6 +11,10 @@ export type Worker = {
     id: number
     full_name: string
     profession: string
+    phone: string
+    client_duration_minutes : number
+    work_start: string
+    company: number
 }
 
 export interface Companys{

@@ -149,9 +149,9 @@ export default function User_company_page({ }: Props) {
 
         {!isLoading ?
           workers?.results.filter((item) => item.full_name.toLowerCase().includes(searchInput)).map((item, index) => (
-            <Link key={index} to={`${item.id}/?search=${item.full_name}`}>
+            <Link key={index} to={`${item.id}/`}>
               <div className="flex flex-col gap-[20px] mr-3">
-                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, '+555 555 555', item.profession, '8:30']} />
+                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, item.phone, item.profession, item.work_start.slice(0, 5)]} />
               </div>
             </Link>
           ))
