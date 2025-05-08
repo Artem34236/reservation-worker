@@ -34,24 +34,23 @@ export default function User_company_page({ }: Props) {
     if (!CompanyId) return
 
     async function getCompanys() {
-
       setIsLoading(true)
 
-      await API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`)
-        .then((data) => {
-          setWorkers(data.data)
-        })
-        .catch((err) => console.log('Ошибка загрузки Работников', err))
+      try {
+        const [companyRes, workerRes] = await Promise.all([
+          API.get(`/companies/?id=${CompanyId}`),
+          API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`)
+        ])
 
-      await API.get(`/companies/?id=${CompanyId}`)
-        .then((data) => {
-          setCompany(data.data)
-        })
-        .catch((err) => console.log('Ошибка загрузки компании', err))
-        .finally(() => setIsLoading(false))
+        setCompany(companyRes.data)
+        setWorkers(workerRes.data)
 
+      } catch (err) {
+        console.error("Ошибка при загрузке данных:", err)
+      } finally {
+        setIsLoading(false)
+      }
     }
-
     getCompanys()
 
   }, [CompanyId])
@@ -165,7 +164,7 @@ export default function User_company_page({ }: Props) {
 
       </div>
 
-      {!isLoading && <div className="flex items-center justify-center gap-[20px]">
+      {!isLoading && <div className="flex items-center mt-[20px] justify-center gap-[20px]">
         {workers?.previous ? <img width={32} onClick={() => handlePage(workers?.previous || "")} className="cursor-pointer" src="/Pagination/left.svg" alt="" /> : <img width={32} src="/Pagination/noLeft.svg" alt="" />}
         {workers?.next ? <img width={32} onClick={() => handlePage(workers?.next || "")} className="cursor-pointer" src="/Pagination/right.svg" alt="" /> : <img width={32} src="/Pagination/noRight.svg" alt="" />}
       </div>}

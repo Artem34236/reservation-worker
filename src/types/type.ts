@@ -12,19 +12,30 @@ export type Worker = {
     full_name: string
     profession: string
     phone: string
-    client_duration_minutes : number
+    client_duration_minutes: number
     work_start: string
     company: number
 }
 
-export interface Companys{
+export type Free_slots = {
+    free_slots: string[]
+}
+
+export type Dates = {
+    html: string
+    date: number
+    month: number
+    year: number
+}
+
+export interface Companys {
     count: number
     next: string | null
     previous: string | null
     results: Company[]
 }
 
-export interface Workers{
+export interface Workers {
     count: number
     next: string | null
     previous: string | null

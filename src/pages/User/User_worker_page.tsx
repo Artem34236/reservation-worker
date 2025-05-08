@@ -1,24 +1,37 @@
 import { useEffect, useState } from "react"
 import P_H3_Link from "../../component/P_H3_Link"
 import User_workerModalWindow from "../../modalWindows/User_workerModalWindow"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import { API } from "../../axios/axios"
-import { Companys, Worker } from "../../types/type"
+import { Companys, Dates, Free_slots, Worker } from "../../types/type"
 import User_worker_page_skeleton from "../../Skeleton/User_worker_page_skeleton"
+import { useDate } from "../../hooks/useDate"
+import User_worker_time_sceleton from "../../Skeleton/User_worker_time_sceleton"
+import User_talonModalWindow from "../../modalWindows/User_talonModalWindow"
 
 type Props = {}
 
 export default function User_worker_page({ }: Props) {
 
-    const [worker, setWorker] = useState<Worker | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [company, setCompany] = useState<Companys | null>(null)
+    const [dates, _] = useState<Dates[]>(useDate(6));
+
+    const [worker, setWorker] = useState<Worker | null>(null);
+    const [workerSlots, setWorkerSlots] = useState<Free_slots | null>(null);
+    const [company, setCompany] = useState<Companys | null>(null);
+    const [selectedTime, setSelectedTime] = useState<string | null>(null)
+
     const { CompanyId, WorkerId } = useParams<{ CompanyId: string, WorkerId: string }>();
-    const [time, setTime] = useState({
-        id: 0,
-        company_Id: 0,
+    const [search, setSearch] = useSearchParams();
+
+    const [isOnclick, setIsOnclick] = useState<boolean>(false);
+    const [talonModal, setTalonModal] = useState<boolean>(false);
+    const [isLoadingFree_slots, setIsLoadingFree_slots] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const [talon, setTalon] = useState({
+        ID: "0",
+        date: "",
         time: "",
-        isOnclick: false,
     })
 
     useEffect(() => {
@@ -26,28 +39,56 @@ export default function User_worker_page({ }: Props) {
         if (!CompanyId) return
 
         async function getCompanys() {
-
             setIsLoading(true)
 
-            await API.get(`/companies/?id=${CompanyId}`)
-                .then((data) => {
-                    setCompany(data.data)
-                })
-                .catch((err) => console.log('Ошибка загрузки компании', err))
+            try {
+                const [companyRes, workerRes] = await Promise.all([
+                    API.get(`/companies/?id=${CompanyId}`),
+                    API.get(`/workers/${WorkerId}/`)
+                ])
 
-            await API.get(`/workers/${WorkerId}/`)
-                .then((data) => {
-                    setWorker(data.data)
-                })
-                .catch((err) => console.log('Ошибка загрузки Работника', err))
-                .finally(() => setIsLoading(false))
+                setCompany(companyRes.data)
+                setWorker(workerRes.data)
 
+            } catch (err) {
+                console.error("Ошибка при загрузке данных:", err)
+            } finally {
+                setIsLoading(false)
+            }
         }
-
         getCompanys()
 
     }, [CompanyId, WorkerId])
 
+
+    useEffect(() => {
+
+        if (!WorkerId || !search.get('date') || !search.get('month') || !search.get('year')) return
+
+        async function getWorkerSlots() {
+
+            setIsLoadingFree_slots(true)
+
+            await API.get(`workers/${WorkerId}/free-slots/?date=${search.get('year')}-${+(search.get('month') || 0) + 1}-${search.get('date')}`)
+                .then((data) => {
+                    setWorkerSlots(data.data)
+                })
+                .catch((err) => console.log('Ошибка загрузки свободго времени', err))
+                .finally(() => setIsLoadingFree_slots(false))
+
+        }
+
+        getWorkerSlots()
+
+    }, [search.get('date'), search.get('month'), search.get('year')])
+
+
+
+    const onClick = (item: string) => {
+        setSearch({ date: search.get('date') || '', month: search.get('month') || '', year: search.get('year') || '', time: item })
+        setSelectedTime(item)
+        setIsOnclick(true)
+    }
 
 
     return (
@@ -88,29 +129,48 @@ export default function User_worker_page({ }: Props) {
 
                         <h2 className="text-white xl:text-[40px] lg:text-[30px] text-[25px] font-[700]">Выберите время:</h2>
 
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-[20px] lg:gap-[38px]">
+                        <div className="flex flex-col items-center sm:justify-center gap-[20px] lg:gap-[38px]">
 
                             <p className="text-white text-center sm:text-left xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">
-                                Начало
+                                День
                             </p>
 
                             <div className="flex flex-wrap justify-center sm:justify-start lg:gap-[10px] gap-[6px]">
-                                {[...Array(10)].map((_, index) => (
+                                {dates.map((item, index) => (
                                     <div
-                                        onClick={() => setTime({ id: 0, company_Id: 0, isOnclick: true, time: "12:00 - 22:00" })}
+                                        onClick={() => setSearch({ date: item.date.toString(), month: (+item.month + 1).toString(), year: item.year.toString() })}
                                         key={index}
                                         className="cursor-pointer lg:w-[80px] w-[60px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9] py-2"
                                     >
                                         <p className="group-hover:text-white duration-300 transition-all lg:text-[14px] text-[12px] font-[700] text-[#000]">
-                                            12:00
+                                            {item.html}
                                         </p>
                                     </div>
                                 ))}
                             </div>
 
                             <p className="text-white text-center sm:text-left xl:text-[30px] lg:text-[20px] text-[15px] font-[700]">
-                                Конец
+                                Время
                             </p>
+
+                            {
+                                !isLoadingFree_slots ?
+                                    (search.get('date') && search.get('month') && search.get('year')) && <div className="flex flex-wrap justify-center sm:justify-start max-w-[390px] lg:max-w-[530px] lg:gap-[10px] gap-[6px]">
+                                        {workerSlots?.free_slots.map((item, index) => (
+                                            <div
+                                                onClick={() => onClick(item)}
+                                                key={index}
+                                                className="cursor-pointer lg:w-[80px] w-[60px] rounded-[3px] text-center group transition-all duration-400 hover:bg-[#F4631A] bg-[#D9D9D9] py-2"
+                                            >
+                                                <p className="group-hover:text-white duration-300 transition-all lg:text-[14px] text-[12px] font-[700] text-[#000]">
+                                                    {item.slice(0, 5)}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    :
+                                    <User_worker_time_sceleton />
+                            }
 
                         </div>
 
@@ -118,9 +178,10 @@ export default function User_worker_page({ }: Props) {
 
                 </div>
 
-                {time.isOnclick && <User_workerModalWindow closseModal={() => setTime((prew) => ({ ...prew, isOnclick: false }))} />}
+                {isOnclick && <User_workerModalWindow setTalon={setTalon} openModal={setTalonModal} selectedTime={selectedTime} closseModal={() => setIsOnclick(false)} />}
+                {talonModal && <User_talonModalWindow talon={talon} closseModal={() => setTalonModal(false)} />}
 
-            </div>
+            </div >
     )
 
 }
