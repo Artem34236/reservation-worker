@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import useNoScroll from "../hooks/useNoScroll.ts"
 import Input from "../component/Input.tsx"
 import { useParams, useSearchParams } from "react-router-dom"
@@ -16,6 +16,8 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
 
     const [search, _] = useSearchParams()
     const { WorkerId } = useParams<{ WorkerId: string }>()
+    const [error, setError] = useState<boolean>(false)
+    const [errorText, setErrorText] = useState<string>('')
 
 
     const [aug, setAftorization] = useState({
@@ -52,10 +54,10 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
                         time: selectedTime || "",
                     })
                     openModal(true)
-                    console.log("Талон успешно создан");
                 })
                 .catch((err) => {
-                    console.error("Ошибка при создании талона:", err)
+                    setErrorText(err.response.data.detail || err.response.data.non_field_errors || "Ошибка")
+                    setError(true)
                 })
         }
 
@@ -91,6 +93,13 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
             setPhoneError("")
         }
     }
+
+    useEffect(() => {
+        if (error) {
+            setError(false)
+            setErrorText('')
+        }
+    }, [aug.full_name, aug.phone, aug.comment])
 
     return (
         <div className="bg-[#33333377] fixed w-full h-full top-0 left-0 z-[100] flex items-center justify-center">
@@ -142,6 +151,12 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
                 >
                     Забронировать
                 </button>
+
+                {error && (
+                    <p className="text-red-500 text-sm text-center mt-3 max-w-md">
+                        {errorText}
+                    </p>
+                )}
             </form>
         </div>
     )

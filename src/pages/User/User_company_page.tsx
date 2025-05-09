@@ -2,11 +2,11 @@ import { Link, useParams, useSearchParams } from "react-router-dom"
 import P_H3_Link from "../../component/P_H3_Link"
 import Card, { CardTop } from "../../component/Card"
 import { useEffect, useState } from "react";
-import { Orange_Button } from "../../component/Orange_button";
 import { API } from "../../axios/axios";
-import { Companys, Workers } from "../../types/type";
+import { Companys, Industrys, Proffession, Workers } from "../../types/type";
 import { User_company_page_top } from "../../Skeleton/User_company_page_top";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
+import { useGetIndustryName } from "../../hooks/useGetIndustryName";
 
 type Props = {}
 
@@ -15,17 +15,32 @@ export default function User_company_page({ }: Props) {
   const [sphere, setSphere] = useState("");
   const [company, setCompany] = useState<Companys | null>(null)
   const [workers, setWorkers] = useState<Workers | null>(null)
+  const [industry, setIndustry] = useState<Industrys | null>(null)
+  const [proffession, setProffession] = useState<Proffession[] | null>(null)
+
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [searchInput, setSearchInput] = useState<string>("");
   const { CompanyId } = useParams<{ CompanyId: string }>();
   const [search, setSearch] = useSearchParams()
 
+
+  
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSphere(e.target.value);
+    setSearch({
+      ...Object.fromEntries(search.entries()),
+      profession: e.target.value,
+    })
   };
 
   const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
+    setSearch({
+      ...Object.fromEntries(search.entries()),
+      search: e.target.value,
+    })
   };
 
 
@@ -37,13 +52,17 @@ export default function User_company_page({ }: Props) {
       setIsLoading(true)
 
       try {
-        const [companyRes, workerRes] = await Promise.all([
+        const [companyRes, workerRes, industryRes, proffessionRes] = await Promise.all([
           API.get(`/companies/?id=${CompanyId}`),
-          API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`)
+          API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`),
+          API.get(`/industries/`),
+          API.get(`/workers/professions/`)
         ])
 
         setCompany(companyRes.data)
         setWorkers(workerRes.data)
+        setIndustry(industryRes.data)
+        setProffession(proffessionRes.data)
 
       } catch (err) {
         console.error("Ошибка при загрузке данных:", err)
@@ -53,7 +72,7 @@ export default function User_company_page({ }: Props) {
     }
     getCompanys()
 
-  }, [CompanyId])
+  }, [CompanyId, search])
 
 
   function handlePage(apiUrl: string) {
@@ -65,6 +84,7 @@ export default function User_company_page({ }: Props) {
       { ...prev, page: page }
     ))
   }
+
 
 
   return (
@@ -84,7 +104,7 @@ export default function User_company_page({ }: Props) {
               <P_H3_Link isEdit={false} p="Имя" h3={company?.results[0].name || ''} link={'none'} />
               <P_H3_Link isEdit={false} p="Номер" h3={company?.results[0].phone || ''} link={'none'} />
               <P_H3_Link isEdit={false} p="Адрес" h3={company?.results[0].address || ''} link={'none'} />
-              <P_H3_Link isEdit={false} p="Сфера деятельности" h3={"Пока не работает"} link={'none'} />
+              <P_H3_Link isEdit={false} p="Сфера деятельности" h3={useGetIndustryName((company?.results[0].industry || 1), industry)} link={'none'} />
             </div>
 
           </div>
@@ -129,12 +149,11 @@ export default function User_company_page({ }: Props) {
                   <option value="" disabled hidden>
                     Профессия
                   </option>
-                  <option value="Ортопед">Ортопед</option>
-                  <option value="Зубная фея">Зубная фея</option>
-                  <option value="Хирург">Хирург</option>
+                  {proffession?.map((item, index) => (
+                    <option key={index} value={item.id}>{item.profession}</option>
+                  ))}
                 </select>
 
-                <Orange_Button to="none" text="Сортировка" className="w-full sm:w-auto md:p-4! p-2!" />
               </div>
             </form>
           </div>

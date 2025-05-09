@@ -1,5 +1,6 @@
 import useNoScroll from "../hooks/useNoScroll.ts"
 import { useNavigate } from "react-router-dom"
+import { Companys, Worker } from "../types/type.ts"
 
 type Props = {
     closseModal: () => void
@@ -8,15 +9,17 @@ type Props = {
         date: string
         time: string
     }
+    worker: Worker | null
+    company: Companys | null
 }
 
-export default function User_talonModalWindow({ closseModal, talon }: Props) {
+export default function User_talonModalWindow({ closseModal, talon, worker, company }: Props) {
     useNoScroll()
 
     const navigate = useNavigate()
 
     function downloadTalonFile(talon: string, date: string, time: string) {
-        const content = `Ваш талон: ${talon}\nДата: ${date}\nВремя: ${time}`;
+        const content = `Ваш талон: ${talon}\nДата: ${date}\nВремя: ${time} \nКомпания: ${company?.results[0].name}\nСпециалист: ${worker?.full_name}\nТелефон: ${company?.results[0].phone}\nАдрес: ${company?.results[0].address}`;
         const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
 
         const url = URL.createObjectURL(blob);

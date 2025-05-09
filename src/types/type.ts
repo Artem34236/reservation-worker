@@ -21,6 +21,16 @@ export type Free_slots = {
     free_slots: string[]
 }
 
+export type Category = {
+    id: number
+    name: string
+}
+
+export type Proffession = {
+    id: number
+    profession: string
+}
+
 export type Dates = {
     html: string
     date: number
@@ -41,3 +51,11 @@ export interface Workers {
     previous: string | null
     results: Worker[]
 }
+
+export interface Industrys {
+    count: number
+    next: string | null
+    previous: string | null
+    results: Category[]
+}
+

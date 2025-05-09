@@ -179,7 +179,7 @@ export default function User_worker_page({ }: Props) {
                 </div>
 
                 {isOnclick && <User_workerModalWindow setTalon={setTalon} openModal={setTalonModal} selectedTime={selectedTime} closseModal={() => setIsOnclick(false)} />}
-                {talonModal && <User_talonModalWindow talon={talon} closseModal={() => setTalonModal(false)} />}
+                {talonModal && <User_talonModalWindow worker={worker} company={company} talon={talon} closseModal={() => setTalonModal(false)} />}
 
             </div >
     )

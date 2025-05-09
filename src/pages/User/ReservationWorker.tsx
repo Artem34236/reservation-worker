@@ -1,44 +1,63 @@
 import { useEffect, useState } from "react";
 import Card, { CardTop } from "../../component/Card"
-import { Orange_Button } from "../../component/Orange_button"
 import { Link, useSearchParams } from "react-router-dom";
 import { API } from "../../axios/axios";
-import { Companys } from "../../types/type";
+import { Companys, Industrys } from "../../types/type";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
+import { useGetIndustryName } from "../../hooks/useGetIndustryName";
 
 type Props = {}
 
 export default function ReservationWorker({ }: Props) {
 
+
     const [sphere, setSphere] = useState("");
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState<string>("");
+
     const [companys, setCompanys] = useState<Companys | null>(null)
+    const [industry, setIndustry] = useState<Industrys | null>(null)
+
     const [search, setSearch] = useSearchParams()
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
+    
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSphere(e.target.value);
+        setSearch({
+            ...Object.fromEntries(search.entries()),
+            industry: e.target.value,
+        })
     };
 
     const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
+        setSearch({
+            ...Object.fromEntries(search.entries()),
+            search: e.target.value,
+        })
     };
 
 
     useEffect(() => {
 
         async function getCompanys() {
-
             setIsLoading(true)
 
-            await API.get(`/companies/?page=${search.get('page') || 1}`)
-                .then((data) => {
-                    setCompanys(data.data)
-                })
-                .catch((err) => console.log('Ошибка загрузки компаний', err))
-                .finally(() => setIsLoading(false))
+            try {
+                const [companyRes, industryRes] = await Promise.all([
+                    API.get(`/companies/?page=${search.get('page') || 1}&industry=${search.get('industry') || ''}&search=${searchInput}`),
+                    API.get(`/industries/`)
+                ])
 
+                setCompanys(companyRes.data)
+                setIndustry(industryRes.data)
+
+            } catch (err) {
+                console.error("Ошибка при загрузке данных:", err)
+            } finally {
+                setIsLoading(false)
+            }
         }
         getCompanys()
 
@@ -53,6 +72,7 @@ export default function ReservationWorker({ }: Props) {
             { ...prev, page: page }
         ))
     }
+
 
     return (
         <div>
@@ -85,12 +105,11 @@ export default function ReservationWorker({ }: Props) {
                             <option value="" disabled hidden>
                                 Сфера
                             </option>
-                            <option value="med">Медицина</option>
-                            <option value="edu">Образование</option>
-                            <option value="it">IT</option>
+                            {industry?.results.map((item, index) => (
+                                <option key={index} value={item.id}>{item.name}</option>
+                            ))}
                         </select>
 
-                        <Orange_Button to="none" text="Сортировка" className="w-full sm:w-auto md:p-4! p-2!" />
                     </div>
                 </form>
             </div>
@@ -108,7 +127,7 @@ export default function ReservationWorker({ }: Props) {
                     companys?.results.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
                         <Link key={index} to={`${item.id}`}>
                             <div className="flex flex-col gap-[20px] mr-3">
-                                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, 'Пока чо не рабоатет']} />
+                                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, useGetIndustryName(item.industry, industry)]} />
                             </div>
                         </Link>
                     ))
