@@ -1,31 +1,40 @@
 import axios from "axios";
-import { Companys } from "../types/type";
-
 
 export const API = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 })
 
-export async function getCompanys() {
-    await API.get('/companies/')
-        .then((data) => {
-            return (data.data)
-        })
-        .catch((err) => console.log('Ошибка загрузки компаний', err))
-}
+API.interceptors.request.use(config => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-export async function getWorkers(CompanyId: number) {
-    await API.get(`/companies/${CompanyId}/workers`)
-        .then((data) => {
-            return (data.data)
-        })
-        .catch((err) => console.log('Ошибка загрузки Работников', err))
-}
 
-export async function getCompany(CompanyId: string, set: React.Dispatch<React.SetStateAction<Companys | null>>) {
-    await API.get(`/companies/?id=${CompanyId}`)
-        .then((data) => {
-            set(data.data)
-        })
-        .catch((err) => console.log('Ошибка загрузки компании', err))
-}
+API.interceptors.response.use(
+    res => res,
+    async error => {
+        const originalRequest = error.config;
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            try {
+                const refreshToken = localStorage.getItem('refresh_token');
+                const response = await axios.post('/auth/refresh', { refresh: refreshToken });
+
+                localStorage.setItem('access_token', response.data.access);
+
+                originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
+                return API(originalRequest); 
+            } catch (err) {
+                localStorage.clear();
+                window.location.href = '/sign_in';
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);

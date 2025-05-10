@@ -3,6 +3,7 @@ import useNoScroll from "../hooks/useNoScroll.ts"
 import Input from "../component/Input.tsx"
 import { useParams, useSearchParams } from "react-router-dom"
 import { API } from "../axios/axios.ts"
+import Loading from "./Loading.tsx"
 
 type Props = {
     closseModal: () => void
@@ -18,6 +19,7 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
     const { WorkerId } = useParams<{ WorkerId: string }>()
     const [error, setError] = useState<boolean>(false)
     const [errorText, setErrorText] = useState<string>('')
+    const [panding, setPending] = useState<boolean>(false)
 
 
     const [aug, setAftorization] = useState({
@@ -45,9 +47,11 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
 
 
         async function reservation() {
+            setPending(true)
             await API.post("reservations/create/", aug)
                 .then((res) => {
                     closseModal()
+                    setPending(false)
                     setTalon({
                         ID: res.data.reservation_id,
                         date: `${search.get('year')}-${search.get('month')}-${search.get('date')}`,
@@ -56,6 +60,7 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
                     openModal(true)
                 })
                 .catch((err) => {
+                    setPending(false)
                     setErrorText(err.response.data.detail || err.response.data.non_field_errors || "Ошибка")
                     setError(true)
                 })
@@ -158,6 +163,8 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
                     </p>
                 )}
             </form>
+
+            {panding && <Loading />}
         </div>
     )
 }

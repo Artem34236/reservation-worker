@@ -1,23 +1,47 @@
 import { Link, useNavigate } from "react-router-dom"
 import Input from "../component/Input"
-import { useStore } from "../state/global_state"
 import React, { useState } from "react"
+import { API } from "../axios/axios"
+import Loading from "../modalWindows/Loading"
 
 type Props = {}
 
 export default function Sign_in({ }: Props) {
 
-    // const aftoryzationTipe = useStore((state) => state.aftorization.setIsAftorization)
-    // const navigate = useNavigate()
+    const [panding, setPanding] = useState(false)
+    const navigate = useNavigate()
 
     const [aug, setAftorization] = useState({
-        name: "",
+        username: "",
         password: "",
     })
-    const [companyId, setCompanyId] = useState('')
 
-    function onSubmit(event: React.FormEvent) {
+
+    async function onSubmit(event: React.FormEvent) {
         event.preventDefault()
+
+        setPanding(true)
+        await API.post('/company/login/', aug)
+            .then(res => {
+
+                localStorage.setItem('access', res.data.access)
+                localStorage.setItem('refresh', res.data.refresh)
+                localStorage.setItem('type', (res.data.company_id ? "company" : "worker"))
+
+                setPanding(false)
+
+                navigate('/')
+            })
+            .catch(err => {
+                setPanding(false)
+                console.log(err)
+            })
+
+        setAftorization({
+            username: "",
+            password: "",
+        })
+
     }
 
     return (
@@ -28,18 +52,10 @@ export default function Sign_in({ }: Props) {
                 <div className="flex flex-col md:gap-[20px] gap-[14px]">
 
                     <Input
-                        value={companyId}
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setCompanyId(ev.target.value)}
-                        img="/User/Layout/CompanyIcon.svg"
-                        placeholder="ID компании (Только для сотрудников)"
-                        type="number"
-                    />
-
-                    <Input
                         isRequired={true}
-                        value={aug.name}
+                        value={aug.username}
                         img="/Register/Name.svg"
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, name: ev.target.value }))}
+                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, username: ev.target.value }))}
                         placeholder="Имя"
                         type="text"
                     />
@@ -55,14 +71,6 @@ export default function Sign_in({ }: Props) {
 
                 </div>
 
-                <label className="inline-flex w-full justify-between items-center cursor-pointer">
-
-                    <input type="checkbox" value="" className="sr-only peer" />
-                    <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Запомнить меня</span>
-                    <div className="relative w-11 h-6 peer-focus:outline-none peer-focus:ring-4  dark:peer-focus:ring-[#1B1429] rounded-full peer dark:bg-[#FFFFFF] peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-[#352B48] after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-[#352B48] after:border-[#352B48] after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-[#E29038]"></div>
-
-                </label>
-
                 <button className="bg-[#E29038] cursor-pointer mt-5 text-white w-full md:py-[15px] py-[10px] md:text-[22px] text-[14px] md:rounded-3xl rounded-[10px]">Войти</button>
 
 
@@ -72,6 +80,8 @@ export default function Sign_in({ }: Props) {
                 </div>
 
             </form>
+
+            {panding && <Loading />}
 
         </div>
     )

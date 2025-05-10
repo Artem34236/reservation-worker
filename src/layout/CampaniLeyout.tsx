@@ -5,7 +5,7 @@ type Props = {}
 
 export default function CampaniLeyout({ }: Props) {
     return (
-        <div className="container bg-[#333333] sm:min-h-[calc(100vh-136px)] md:min-h-[calc(100vh-204px)] min-h-[calc(100vh-136px)] lg:flex">
+        <div className="container bg-[#333333] sm:min-h-[calc(100vh-136px)] md:min-h-[calc(100vh-184.5px)] min-h-[calc(100vh-136px)] lg:flex">
 
             <div className="lg:w-[220px] w-[0] shrink-0" />
 

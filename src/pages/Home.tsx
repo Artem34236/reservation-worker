@@ -1,13 +1,11 @@
 import { Orange_Link } from "../component/Orange_button"
-import { useStore } from "../state/global_state"
 
 
 type Props = {}
 
 export default function Home({ }: Props) {
 
-  const aftoryzationTipe = useStore((state) => state.aftorization.type)
-
+  const aftoryzationTipe = localStorage.getItem('type') || 'user'
 
 
   return (

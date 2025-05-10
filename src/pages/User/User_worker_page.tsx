@@ -36,7 +36,7 @@ export default function User_worker_page({ }: Props) {
 
     useEffect(() => {
 
-        if (!CompanyId) return
+        if (!CompanyId && WorkerId) return
 
         async function getCompanys() {
             setIsLoading(true)
@@ -69,7 +69,7 @@ export default function User_worker_page({ }: Props) {
 
             setIsLoadingFree_slots(true)
 
-            await API.get(`workers/${WorkerId}/free-slots/?date=${search.get('year')}-${+(search.get('month') || 0) + 1}-${search.get('date')}`)
+            await API.get(`workers/${WorkerId}/free-slots/?date=${search.get('year')}-${search.get('month')}-${search.get('date')}`)
                 .then((data) => {
                     setWorkerSlots(data.data)
                 })
