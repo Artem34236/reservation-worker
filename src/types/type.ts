@@ -10,7 +10,7 @@ export type Company = {
 export type Worker = {
     id: number
     full_name: string
-    profession: string
+    profession: number
     phone: string
     client_duration_minutes: number
     work_start: string
@@ -28,7 +28,7 @@ export type Category = {
 
 export type Proffession = {
     id: number
-    profession: string
+    name: string
 }
 
 export type Dates = {

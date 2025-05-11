@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
 import Input from "../../component/Input"
-import { useStore } from "../../state/global_state"
 import { ChangeEvent, useEffect, useState } from "react"
 import { API } from "../../axios/axios"
 import { Industrys } from "../../types/type"

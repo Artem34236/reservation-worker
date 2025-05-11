@@ -6,7 +6,7 @@ import { API } from "../../axios/axios";
 import { Companys, Industrys, Proffession, Workers } from "../../types/type";
 import { User_company_page_top } from "../../Skeleton/User_company_page_top";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
-import { useGetIndustryName } from "../../hooks/useGetIndustryName";
+import { useGet1Name, useGetIndustryName } from "../../hooks/useGetIndustryName";
 
 type Props = {}
 
@@ -150,7 +150,7 @@ export default function User_company_page({ }: Props) {
                     Профессия
                   </option>
                   {proffession?.map((item, index) => (
-                    <option key={index} value={item.id}>{item.profession}</option>
+                    <option key={index} value={item.id}>{item.name}</option>
                   ))}
                 </select>
 
@@ -169,7 +169,7 @@ export default function User_company_page({ }: Props) {
           workers?.results.filter((item) => item.full_name.toLowerCase().includes(searchInput)).map((item, index) => (
             <Link key={index} to={`${item.id}/`}>
               <div className="flex flex-col gap-[20px] mr-3">
-                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, item.phone, item.profession, item.work_start.slice(0, 5)]} />
+                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.full_name, item.phone, useGet1Name(item.profession, proffession), item.work_start.slice(0, 5)]} />
               </div>
             </Link>
           ))

@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router"
 
 import Home from "./pages/Home"
 import Header from "./component/Header"
-import Footer from "./component/Footer"
 import Register_Company from "./pages/Compani/Register_Company"
 import Sign_in from "./pages/Sign_in"
 import IsAught from "./hooks/IsAught"
@@ -62,7 +61,7 @@ export default function App({ }: Props) {
 
     </Routes>
 
-    <Footer />
+
 
   </>
   )

@@ -1,11 +1,37 @@
 import { Outlet } from "react-router-dom"
 import { Orange_Link } from "../component/Orange_button"
+import { useEffect, useState } from "react"
+import Company_layout_sceleton from "../Skeleton/Company_layout_sceleton"
+import { useStore } from "../state/globalState"
+
 
 type Props = {}
 
 export default function CampaniLeyout({ }: Props) {
+
+    const [loading, setLoading] = useState(false)
+    const { loadCompany, data } = useStore((state) => state.company);
+
+
+    useEffect(() => {
+
+        async function getCompany() {
+            setLoading(true)
+            try {
+                await loadCompany()
+            } catch (err) {
+                console.error("Ошибка при загрузке данных:", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+        getCompany()
+
+    }, [])
+
+
     return (
-        <div className="container bg-[#333333] sm:min-h-[calc(100vh-136px)] md:min-h-[calc(100vh-184.5px)] min-h-[calc(100vh-136px)] lg:flex">
+        !loading ? <div className="container bg-[#333333] sm:min-h-[calc(100vh-68px)] md:min-h-[calc(100vh-92px)] min-h-[calc(100vh-68px)] lg:flex">
 
             <div className="lg:w-[220px] w-[0] shrink-0" />
 
@@ -13,7 +39,7 @@ export default function CampaniLeyout({ }: Props) {
 
                 <div className="flex lg:flex-col px-5 items-center justify-center gap-3">
                     <img className="lg:w-[150px] w-[50px]" src="/Compani/BaseIcon.svg" alt="" />
-                    <h3 className="text-white font-bold text-2xl">Name</h3>
+                    <h3 className="text-white font-bold text-2xl">{data?.company?.name}</h3>
                 </div>
 
                 <div className="flex lg:flex-col sm:gap-3 gap-2 items-center sm:w-full w-[236px] justify-center lg:p-4 flex-wrap">
@@ -32,6 +58,7 @@ export default function CampaniLeyout({ }: Props) {
             </div>
 
         </div>
-
+            :
+            <Company_layout_sceleton />
     )
 }

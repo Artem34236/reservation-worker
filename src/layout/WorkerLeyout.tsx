@@ -9,7 +9,7 @@ export default function WorkerLeyout({ }: Props) {
 
             <div className="lg:w-[220px] w-[0] shrink-0" />
 
-            <div className="bg-[#26222E] py-3 px-5 justify-between items-center flex lg:flex-col gap-2 lg:max-w-[220px] w-full lg:min-h-[calc(100vh-93px)] lg:max-h-[calc(100vh-124px)] lg:fixed">
+            <div className="bg-[#26222E] py-3 px-5 justify-between items-center flex lg:flex-col gap-2 lg:max-w-[220px] w-full sm:min-h-[calc(100vh-68px)] md:min-h-[calc(100vh-92px)] min-h-[calc(100vh-68px)] lg:fixed">
 
                 <div className="flex lg:flex-col px-5 items-center justify-center gap-3">
                     <img className="lg:w-[150px] w-[50px]" src="/Worker/BaseIcon.svg" alt="" />
