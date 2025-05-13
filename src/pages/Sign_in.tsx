@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import Input from "../component/Input"
 import React, { useState } from "react"
-import { API } from "../axios/axios"
+import { API_NOT_INTERSEPTORS } from "../axios/axios"
 import Loading from "../modalWindows/Loading"
 
 type Props = {}
@@ -10,18 +10,19 @@ export default function Sign_in({ }: Props) {
 
     const [panding, setPanding] = useState(false)
     const navigate = useNavigate()
+    const [error, setError] = useState('')
 
     const [aug, setAftorization] = useState({
         username: "",
         password: "",
     })
-
+    
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault()
 
         setPanding(true)
-        await API.post('/company/login/', aug)
+        await API_NOT_INTERSEPTORS.post('/company/login/', aug)
             .then(res => {
 
                 localStorage.setItem('access', res.data.access)
@@ -32,21 +33,27 @@ export default function Sign_in({ }: Props) {
 
                 navigate('/')
             })
-            .catch(err => {
+            .catch(() => {
                 setPanding(false)
-                console.log(err)
+                setAftorization({
+                    username: "",
+                    password: "",
+                })
+                setError("Неверный логин или пароль")
             })
 
-        setAftorization({
-            username: "",
-            password: "",
-        })
+    }
+
+    function onChange(event: React.ChangeEvent<HTMLInputElement>, key: string) {
+
+        setError('')
+        setAftorization(prev => ({ ...prev, [key]: event.target.value }))
 
     }
 
 
     return (
-        <div className="container bg-[#333333] min-h-fit sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[1vh] pt-[10vh]">
+        <div className="container bg-[#333333] min-h-fit md:h-[calc(100vh-92px)] h-[calc(100vh-70px)] md:pt-[1vh] pt-[10vh]">
 
             <form onSubmit={onSubmit} className="flex flex-col rounded-2xl items-center w-max md:p-[36px] p-[20px] justify-center gap-[20px] bg-[#1B1429] m-auto">
 
@@ -56,7 +63,7 @@ export default function Sign_in({ }: Props) {
                         isRequired={true}
                         value={aug.username}
                         img="/Register/Name.svg"
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, username: ev.target.value }))}
+                        onChange={(ev) => onChange(ev, 'username')}
                         placeholder="Имя"
                         type="text"
                     />
@@ -65,14 +72,20 @@ export default function Sign_in({ }: Props) {
                         isRequired={true}
                         value={aug.password}
                         img="/Register/Pass.svg"
-                        onChange={(ev: React.ChangeEvent<HTMLInputElement>) => setAftorization(prev => ({ ...prev, password: ev.target.value }))}
+                        onChange={(ev) => onChange(ev, 'password')}
                         placeholder="Пароль"
                         type="text"
                     />
 
                 </div>
 
-                <button className="bg-[#E29038] cursor-pointer mt-5 text-white w-full md:py-[15px] py-[10px] md:text-[22px] text-[14px] md:rounded-3xl rounded-[10px]">Войти</button>
+                {error && (
+                    <p className="text-red-500 text-sm text-center max-w-md">
+                        {error}
+                    </p>
+                )}
+
+                <button className="bg-[#E29038] cursor-pointer text-white w-full md:py-[15px] py-[10px] md:text-[22px] text-[14px] md:rounded-3xl rounded-[10px]">Войти</button>
 
 
                 <div className="flex items-center gap-x-1 w-full justify-end">

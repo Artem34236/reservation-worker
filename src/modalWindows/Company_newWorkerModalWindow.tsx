@@ -1,30 +1,33 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react"
 import Input from "../component/Input.tsx"
 import useNoScroll from "../hooks/useNoScroll.ts"
 import { API } from "../axios/axios.ts"
-import { Proffession } from "../types/type.ts"
+import { Category } from "../types/type.ts"
 import Loading from "./Loading.tsx"
 
 
 type Props = {
     closseModal: () => void
+    setReload: Dispatch<SetStateAction<boolean>>
 }
 
-export default function Company_newWorkerModalWindow({ closseModal }: Props) {
+export default function Company_newWorkerModalWindow({ closseModal, setReload }: Props) {
     useNoScroll()
 
     const [Error, setError] = useState<string>(" ")
-    // const [proffession, setProffession] = useState<Proffession[]>([])
+    const [proffession, setProffession] = useState<Category[]>([])
     const [panding, setPanding] = useState<boolean>(false)
+    const [password2, setPassword2] = useState<string>("")
 
     const [aug, setAftorization] = useState({
         full_name: "",
         phone: "",
         username: "",
-        industry: '',
+        profession: '',
         password: '',
-        password2: '',
-        client_duration_minutes: ''
+        client_duration_minutes: '',
+        work_start: '',
+        work_end: ''
     })
 
 
@@ -38,7 +41,7 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
             return
         }
 
-        if (aug.password !== aug.password2) {
+        if (aug.password !== password2) {
             setError("Пароли не совпадают");
             return;
         }
@@ -46,7 +49,10 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
 
         setPanding(true)
         await API.post("/workers/add/", aug)
-            .then(a => console.log(a.data))
+            .then(() => {
+                closseModal()
+                setReload(prev => !prev)
+            })
             .catch(err => {
                 console.log(err)
                 setError("Ошибка при регистрации работника")
@@ -59,29 +65,31 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
             full_name: "",
             phone: "",
             username: "",
-            industry: '',
+            profession: '',
             password: '',
-            password2: '',
-            client_duration_minutes: ''
+            client_duration_minutes: '',
+            work_start: '',
+            work_end: ''
         })
+
+        setPassword2("")
 
     }
 
 
     useEffect(() => {
 
-        async function getIndustry() {
+        async function getProffession() {
             setPanding(true)
             await API.get("/workers/professions/")
                 .then(res => {
-                    // setProffession(res.data)
-                    console.log(res.data);
+                    setProffession(res.data)
                 })
                 .finally(() => {
                     setPanding(false)
                 })
         }
-        getIndustry()
+        getProffession()
 
     }, [])
 
@@ -108,12 +116,16 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
 
 
     function changeEV(ev: ChangeEvent<HTMLInputElement>, key: string) {
-        const value = ev.target.value
+        let value = ev.target.value
         setError(' ')
 
         if (key === 'username') {
             const isValid = /^[a-zA-Z0-9_]*$/.test(value)
             if (!isValid) return
+        }
+
+        if (key === 'work_start' || key === 'work_end') {
+            value = value + ":00"
         }
 
         setAftorization(prev => ({ ...prev, [key]: value }))
@@ -158,19 +170,37 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
                         type="text"
                     />
 
+                    <Input
+                        value={aug.work_start.slice(0, 5)}
+                        onChange={(ev) => changeEV(ev, "work_start")}
+                        img="/Compani/Company_modal_window/Start_time.svg"
+                        placeholder="Начало работы"
+                        type="time"
+                    />
+
+                    <Input
+                        value={aug.work_end.slice(0, 5)}
+                        onChange={(ev) => changeEV(ev, "work_end")}
+                        img="/Compani/Company_modal_window/End_time.svg"
+                        placeholder="Конец работы"
+                        type="time"
+                    />
+
                     <select
                         required
-                        value={aug.industry.toString()}
-                        onChange={(ev: React.ChangeEvent<HTMLSelectElement>) => setAftorization(prev => ({ ...prev, industry: ev.target.value }))}
+                        value={aug.profession.toString()}
+                        onChange={(ev: React.ChangeEvent<HTMLSelectElement>) => setAftorization(prev => ({ ...prev, profession: ev.target.value }))}
                         className="bg-[#3A2E4D] text-white outline-0 rounded-3xl px-4 py-3 w-full sm:w-[345px]"
                     >
                         <option value="" disabled hidden>
-                            Профессия
+                            Профессии
                         </option>
 
-                        <option value="1">
-                            фыв
-                        </option>
+                        {proffession.map((item, index) => (
+                            <option key={index} value={item.id}>
+                                {item.name}
+                            </option>
+                        ))}
 
                     </select>
 
@@ -181,6 +211,8 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
                         img="/Compani/Layout/History.svg"
                         placeholder="Длительность сеанса (мин)"
                         type="number"
+                        min={1}
+                        max={120}
                     />
 
                     <Input
@@ -194,8 +226,8 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
 
                     <Input
                         isRequired={true}
-                        value={aug.password2}
-                        onChange={(ev) => changeEV(ev, "password2")}
+                        value={password2}
+                        onChange={(ev) => setPassword2(ev.target.value)}
                         img="/Register/Pass.svg"
                         placeholder="Повторить пароль"
                         type="text"
@@ -210,7 +242,7 @@ export default function Company_newWorkerModalWindow({ closseModal }: Props) {
                     </p>
                 )}
 
-                <button className="bg-[#E29038] mt-5 cursor-pointer text-white w-full md:py-[10px] py-[10px] md:text-[18px] text-[14px] md:rounded-3xl rounded-[10px]">Забронировать</button>
+                <button className="bg-[#E29038] mt-5 cursor-pointer text-white w-full md:py-[10px] py-[10px] md:text-[18px] text-[14px] md:rounded-3xl rounded-[10px]">Создать</button>
 
             </form>
 

@@ -5,15 +5,6 @@ export default function Company_worker_skeleton({ }: Props) {
     return (
         <div className="animate-pulse">
 
-            <div className="bg-[#352B48] sm:py-[14px] py-[6px] sm:px-[40px] px-[6px]">
-                <form className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
-                    <label className="py-[5px] px-[12px] sm:py-[12px] sm:px-[18px] border border-[#E5E5E5] rounded-[8px] flex items-center justify-between flex-1 w-full sm:max-w-[296px]">
-                        <div className="bg-gray-500/30 h-[20px] w-full rounded" />
-                        <div className="bg-gray-500/30 w-[20px] h-[20px] rounded ml-2" />
-                    </label>
-                </form>
-            </div>
-
 
             <div className="lg:p-[40px] p-[10px]">
                 <div className="flex justify-between items-center border-b-[1px] border-[#E5E5E5] py-[12px]">

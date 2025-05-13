@@ -14,6 +14,7 @@ export type Worker = {
     phone: string
     client_duration_minutes: number
     work_start: string
+    work_end: string
     company: number
 }
 
@@ -22,11 +23,6 @@ export type Free_slots = {
 }
 
 export type Category = {
-    id: number
-    name: string
-}
-
-export type Proffession = {
     id: number
     name: string
 }
@@ -51,11 +47,3 @@ export interface Workers {
     previous: string | null
     results: Worker[]
 }
-
-export interface Industrys {
-    count: number
-    next: string | null
-    previous: string | null
-    results: Category[]
-}
-

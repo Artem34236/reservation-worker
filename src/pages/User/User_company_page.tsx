@@ -3,10 +3,10 @@ import P_H3_Link from "../../component/P_H3_Link"
 import Card, { CardTop } from "../../component/Card"
 import { useEffect, useState } from "react";
 import { API } from "../../axios/axios";
-import { Companys, Industrys, Proffession, Workers } from "../../types/type";
+import { Companys, Category, Workers } from "../../types/type";
 import { User_company_page_top } from "../../Skeleton/User_company_page_top";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
-import { useGet1Name, useGetIndustryName } from "../../hooks/useGetIndustryName";
+import { useGet1Name } from "../../hooks/useGetIndustryName";
 
 type Props = {}
 
@@ -15,8 +15,8 @@ export default function User_company_page({ }: Props) {
   const [sphere, setSphere] = useState("");
   const [company, setCompany] = useState<Companys | null>(null)
   const [workers, setWorkers] = useState<Workers | null>(null)
-  const [industry, setIndustry] = useState<Industrys | null>(null)
-  const [proffession, setProffession] = useState<Proffession[] | null>(null)
+  const [industry, setIndustry] = useState<Category[]>([])
+  const [proffession, setProffession] = useState<Category[]>([])
 
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,7 +54,7 @@ export default function User_company_page({ }: Props) {
       try {
         const [companyRes, workerRes, industryRes, proffessionRes] = await Promise.all([
           API.get(`/companies/?id=${CompanyId}`),
-          API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}`),
+          API.get(`/companies/${CompanyId}/workers/?page=${search.get('page') || 1}&profession=${search.get('profession') || ''}&search=${searchInput}`),
           API.get(`/industries/`),
           API.get(`/workers/professions/`)
         ])
@@ -104,7 +104,7 @@ export default function User_company_page({ }: Props) {
               <P_H3_Link isEdit={false} p="Имя" h3={company?.results[0].name || ''} link={'none'} />
               <P_H3_Link isEdit={false} p="Номер" h3={company?.results[0].phone || ''} link={'none'} />
               <P_H3_Link isEdit={false} p="Адрес" h3={company?.results[0].address || ''} link={'none'} />
-              <P_H3_Link isEdit={false} p="Сфера деятельности" h3={useGetIndustryName((company?.results[0].industry || 1), industry)} link={'none'} />
+              <P_H3_Link isEdit={false} p="Сфера деятельности" h3={useGet1Name((company?.results[0].industry || 1), industry)} link={'none'} />
             </div>
 
           </div>

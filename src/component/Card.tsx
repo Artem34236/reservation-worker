@@ -9,7 +9,7 @@ type Props = {
 
 export default function Card({ children, elements, image, imageCss = '' }: Props) {
     return (
-        <div className="p-[15px] bg-[#352B48] rounded-2xl flex justify-between items-center gap-[30px] text-center">
+        <div className="p-[15px] bg-[#352B48] rounded-2xl flex justify-between gap-[10px] items-center text-center">
 
             <div className="flex items-center lg:gap-[43px] gap-[10px] flex-1">
 
@@ -21,7 +21,7 @@ export default function Card({ children, elements, image, imageCss = '' }: Props
                     {
                         elements.map((i, index) => {
                             return (
-                                <div key={index} className="sm:p-[10px] p-[5px]">
+                                <div key={index} className="py-[5px]">
                                     <p className="text-white w-[130px] text-nowrap sm:text-[14px] text-[10px] sm:min-w-[60px] min-w-[40px] 2xl:min-w-[100px]">{i}</p>
                                 </div>
                             )
@@ -41,7 +41,7 @@ export default function Card({ children, elements, image, imageCss = '' }: Props
 
 export function CardTop({ children, elements }: Props) {
     return (
-        <div className="p-[15px] flex justify-between items-center gap-[30px]  text-center">
+        <div className="p-[15px] flex justify-between items-center gap-[10px]  text-center">
 
             <div className="flex flex-1 items-center lg:gap-[43px] gap-[10px]">
 
@@ -51,7 +51,7 @@ export function CardTop({ children, elements }: Props) {
                     {
                         elements.map((i, index) => {
                             return (
-                                <div key={index} className="sm:p-[10px] p-[5px]">
+                                <div key={index} className="py-[5px]">
                                     <p className="text-[#E5E5E5] w-[130px] sm:text-[14px] text-[10px] sm:min-w-[60px] min-w-[40px] 2xl:min-w-[100px]">{i}</p>
                                 </div>
                             )

@@ -4,7 +4,7 @@ type Props = {}
 
 export default function Company_layout_sceleton({ }: Props) {
     return (
-        <div className="container bg-[#333333] sm:min-h-[calc(100vh-68px)] md:min-h-[calc(100vh-92px)] min-h-[calc(100vh-68px)] lg:flex">
+        <div className="container bg-[#333333]  sm:min-h-[calc(100vh-68px)] md:min-h-[calc(100vh-92px)] min-h-[calc(100vh-68px)] lg:flex">
 
             <div className="lg:w-[220px] w-[0] shrink-0" />
 

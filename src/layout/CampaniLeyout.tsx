@@ -29,6 +29,13 @@ export default function CampaniLeyout({ }: Props) {
 
     }, [])
 
+    function logOut(){
+
+        localStorage.clear()
+        window.location.href = "/"
+
+    }
+
 
     return (
         !loading ? <div className="container bg-[#333333] sm:min-h-[calc(100vh-68px)] md:min-h-[calc(100vh-92px)] min-h-[calc(100vh-68px)] lg:flex">
@@ -49,7 +56,9 @@ export default function CampaniLeyout({ }: Props) {
                 </div>
 
                 <div></div>
-                <div></div>
+               <button onClick={() => logOut()} className="cursor-pointer">
+                    <img width={22} src="/logout.svg" alt="" />
+               </button>
 
             </div>
 

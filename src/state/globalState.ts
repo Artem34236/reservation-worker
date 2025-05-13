@@ -38,6 +38,8 @@ export const useStore = create<GlobalState>()((set) => ({
                     },
                 }));
             } catch (error) {
+                localStorage.clear();
+                
                 set((state) => ({
                     isLoading: false,
                     company: {

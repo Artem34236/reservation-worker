@@ -1,6 +1,6 @@
 import P_H3_Link from "../../component/P_H3_Link"
 import Company_acc_sceleton from "../../Skeleton/Company_acc_sceleton"
-import { useGetIndustryName } from "../../hooks/useGetIndustryName"
+import { useGet1Name } from "../../hooks/useGetIndustryName"
 import { useStore } from "../../state/globalState"
 
 type Props = {}
@@ -64,7 +64,7 @@ export default function Compani_acc({ }: Props) {
                     <P_H3_Link
                         isEdit={false}
                         p="Сфера деятельности"
-                        h3={useGetIndustryName((company.data.company?.industry || 1), company.data.industrys)} link={'none'}
+                        h3={useGet1Name((company.data.company?.industry || 1), company.data.industrys)} link={'none'}
                     />
 
                 </div>

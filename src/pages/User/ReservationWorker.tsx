@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Card, { CardTop } from "../../component/Card"
 import { Link, useSearchParams } from "react-router-dom";
 import { API } from "../../axios/axios";
-import { Companys, Industrys } from "../../types/type";
+import { Companys, Category } from "../../types/type";
 import { CardSkeleton } from "../../Skeleton/CardSkeleton";
-import { useGetIndustryName } from "../../hooks/useGetIndustryName";
+import { useGet1Name } from "../../hooks/useGetIndustryName";
 
 type Props = {}
 
@@ -15,7 +15,7 @@ export default function ReservationWorker({ }: Props) {
     const [searchInput, setSearchInput] = useState<string>("");
 
     const [companys, setCompanys] = useState<Companys | null>(null)
-    const [industry, setIndustry] = useState<Industrys | null>(null)
+    const [industry, setIndustry] = useState<Category[] | null>(null)
 
     const [search, setSearch] = useSearchParams()
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -105,7 +105,7 @@ export default function ReservationWorker({ }: Props) {
                             <option value="" disabled hidden>
                                 Сфера
                             </option>
-                            {industry?.results.map((item, index) => (
+                            {industry?.map((item, index) => (
                                 <option key={index} value={item.id}>{item.name}</option>
                             ))}
                         </select>
@@ -127,7 +127,7 @@ export default function ReservationWorker({ }: Props) {
                     companys?.results.filter((item) => item.name.toLowerCase().includes(searchInput)).map((item, index) => (
                         <Link key={index} to={`${item.id}`}>
                             <div className="flex flex-col gap-[20px] mr-3">
-                                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, useGetIndustryName(item.industry, industry)]} />
+                                <Card imageCss="w-[58px] h-[58px]" image="/Compani/BaseIcon.svg" elements={[item.name, item.phone, item.address, useGet1Name(item.industry, industry)]} />
                             </div>
                         </Link>
                     ))

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Input from "../../component/Input"
 import { ChangeEvent, useEffect, useState } from "react"
 import { API } from "../../axios/axios"
-import { Industrys } from "../../types/type"
+import { Category } from "../../types/type"
 import Loading from "../../modalWindows/Loading"
 
 
@@ -12,7 +12,8 @@ export default function Register_Company({ }: Props) {
 
     const [panding, setPanding] = useState<boolean>(false)
     const [error, setError] = useState<boolean>(false)
-    const [industry, setIndustry] = useState<Industrys | null>(null)
+    const [industry, setIndustry] = useState<Category[] | null>(null)
+    const [password2, setPassword2] = useState<string>("")
 
     const navigate = useNavigate()
 
@@ -41,7 +42,6 @@ export default function Register_Company({ }: Props) {
         name: "",
         phone: "",
         password: "",
-        password2: "",
         industry: '',
         address: ""
     })
@@ -49,7 +49,7 @@ export default function Register_Company({ }: Props) {
     function onSubmit(event: React.FormEvent) {
         event.preventDefault()
 
-        if (aug.password !== aug.password2) {
+        if (aug.password !== password2) {
             setError(true)
             return
         }
@@ -70,10 +70,11 @@ export default function Register_Company({ }: Props) {
             name: "",
             phone: "",
             password: "",
-            password2: "",
             industry: '',
             address: ""
         })
+
+        setPassword2("")
 
     }
 
@@ -107,7 +108,7 @@ export default function Register_Company({ }: Props) {
 
 
     return (
-        <div className="container min-h-fit bg-[#333333] sm:h-[calc(100vh-136px)] md:h-[calc(100vh-184.5px)] h-[calc(100vh-136px)] md:pt-[8vh] pt-[1vh]">
+        <div className="container min-h-fit bg-[#333333] md:h-[calc(100vh-92px)] h-[calc(100vh-70px)] xl:pt-[8vh] md:pt-[2vh] pt-[1vh]">
 
             <form onSubmit={onSubmit} className="flex flex-col rounded-2xl items-center w-max p-[20px] justify-center gap-[15px] bg-[#1B1429] m-auto">
 
@@ -151,8 +152,8 @@ export default function Register_Company({ }: Props) {
 
                     <Input
                         isRequired={true}
-                        value={aug.password2}
-                        onChange={(ev) => changeEV(ev, 'password2')}
+                        value={password2}
+                        onChange={(ev) => setPassword2(ev.target.value)}
                         img="/Register/Pass.svg"
                         placeholder="Повторить пароль"
                         type="text"
@@ -167,7 +168,7 @@ export default function Register_Company({ }: Props) {
                         <option value="" disabled hidden>
                             Сфера деятельности
                         </option>
-                        {industry?.results.map((item, index) => (
+                        {industry?.map((item, index) => (
                             <option key={index} value={item.id}>
                                 {item.name}
                             </option>

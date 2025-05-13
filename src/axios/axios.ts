@@ -6,6 +6,10 @@ export const API = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 })
 
+export const API_NOT_INTERSEPTORS = axios.create({
+    baseURL: import.meta.env.VITE_API_URL
+})
+
 API.interceptors.request.use(config => {
     const token = localStorage.getItem('access');
     if (token) {
