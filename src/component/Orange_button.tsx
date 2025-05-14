@@ -14,8 +14,8 @@ type Props = {
 
 export function Orange_Link({ text, image, className, to }: Props) {
 
-    const activeClass = `bg-[#F4631AFE] text-center text-[#FFFFFF] cursor-pointer rounded-[4px] py-[3px] px-[20px] gap-[15px] text-[16px] ${className}`
-    const defaultClass = `cursor-pointer text-center rounded-[4px] hover:bg-[#F4631AFE] transition hover:text-[#FFFFFF] duration-[0.5s] py-[3px] px-[20px] gap-[15px] text-[#E29038] w-[148px] text-[16px] block ${className}`
+    const activeClass = `bg-[#F4631AFE] text-center text-[#FFFFFF] cursor-pointer rounded-[4px] py-[3px] px-[20px] gap-[15px] w-[154px] text-[14px] ${className}`
+    const defaultClass = `cursor-pointer text-center rounded-[4px] hover:bg-[#F4631AFE] transition hover:text-[#FFFFFF] duration-[0.5s] py-[3px] px-[20px] gap-[15px] text-[#E29038] w-[154px] text-[14px] block ${className}`
 
     return (
         <NavLink to={to} className={({ isActive }) => isActive ? activeClass : defaultClass}>

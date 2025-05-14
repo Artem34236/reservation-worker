@@ -11,7 +11,6 @@ import useScrollToTop from "./hooks/useScrollTop"
 import Company_worker_page from "./pages/Compani/Company_worker_page"
 import Compani_acc from "./pages/Compani/Account"
 import Register_worker from "./pages/Compani/Register_worker"
-import Company_history_page from "./pages/Compani/Company_history_page"
 
 import Worker_acc from "./pages/Worker/Account"
 import Reservation from "./pages/Worker/Reservation"
@@ -50,7 +49,7 @@ export default function App({ }: Props) {
       <Route path="/company" element={<IsAught type="company"> <CampaniLeyout /> </IsAught>} >
         <Route path="worker" element={<Company_worker_page />} />
         <Route path="create" element={<Register_worker />} />
-        <Route path="history" element={<Company_history_page />} />
+        {/* <Route path="history" element={<Company_history_page />} /> */}
         <Route path="acc" element={<Compani_acc />} />
       </Route>
 

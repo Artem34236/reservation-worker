@@ -47,3 +47,13 @@ export interface Workers {
     previous: string | null
     results: Worker[]
 }
+
+export type ReservationData = {
+    worker: number
+    full_name: string,
+    phone: string,
+    comment: string,
+    date: string,
+    time: string,
+    ticket_number: string
+}

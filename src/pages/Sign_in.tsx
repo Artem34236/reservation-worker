@@ -11,35 +11,41 @@ export default function Sign_in({ }: Props) {
     const [panding, setPanding] = useState(false)
     const navigate = useNavigate()
     const [error, setError] = useState('')
+    const [userType, setUserType] = useState<'company' | 'worker'>('company')
 
     const [aug, setAftorization] = useState({
         username: "",
         password: "",
     })
-    
+
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault()
 
         setPanding(true)
-        await API_NOT_INTERSEPTORS.post('/company/login/', aug)
+        await API_NOT_INTERSEPTORS.post((userType === "company" ? '/company/login/' : "/workers/login/"), aug)
             .then(res => {
 
-                localStorage.setItem('access', res.data.access)
-                localStorage.setItem('refresh', res.data.refresh)
+                if (res.data.company_id) {
+                    localStorage.setItem('access', res.data.access)
+                    localStorage.setItem('refresh', res.data.refresh)
+                }
+                else {
+                    localStorage.setItem('id', res.data.worker_id)
+                }
+
                 localStorage.setItem('type', (res.data.company_id ? "company" : "worker"))
 
                 setPanding(false)
-
                 navigate('/')
             })
-            .catch(() => {
+            .catch((err) => {
                 setPanding(false)
                 setAftorization({
                     username: "",
                     password: "",
                 })
-                setError("Неверный логин или пароль")
+                setError(err.response.data.error)
             })
 
     }
@@ -77,6 +83,32 @@ export default function Sign_in({ }: Props) {
                         type="text"
                     />
 
+                </div>
+
+                <div className="flex items-center justify-between w-full">
+                    <label className="flex items-center gap-x-2 text-white">
+                        <input
+                            onChange={() => setUserType('company')}
+                            checked={userType === 'company'}
+                            value={'company'}
+                            type="radio"
+                            name="qwe"
+                            id=""
+                        />
+                        Компания
+                    </label>
+
+                    <label className="flex items-center gap-x-2 text-white">
+                        <input
+                            onChange={() => setUserType('worker')}
+                            checked={userType === 'worker'}
+                            value={'worker'}
+                            type="radio"
+                            name="qwe"
+                            id=""
+                        />
+                        Работник
+                    </label>
                 </div>
 
                 {error && (

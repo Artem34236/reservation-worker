@@ -80,7 +80,7 @@ export default function User_worker_page({ }: Props) {
 
         getWorkerSlots()
 
-    }, [search.get('date'), search.get('month'), search.get('year')])
+    }, [search.get('date'), search.get('month'), search.get('year'), isOnclick])
 
 
 
@@ -108,7 +108,7 @@ export default function User_worker_page({ }: Props) {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
                             <P_H3_Link isEdit={false} p="Имя" h3={worker?.full_name || ''} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Номер" h3={worker?.phone || ''} link={'/edit'} />
-                            <P_H3_Link isEdit={false} p="Профессия" h3={worker?.profession || ''} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Профессия" h3={worker?.profession.toString() || ''} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Компания" h3={company?.results[0].name || ''} link={'/edit'} />
                         </div>
 
@@ -119,7 +119,7 @@ export default function User_worker_page({ }: Props) {
 
                     <div className="flex flex-col bg-[#352B48] w-full sm:w-max xl:p-[40px] p-[20px] gap-3 mx-auto lg:mx-0">
                         <div className="mx-auto">
-                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Работает с <span className="text-[#F4631A]">{worker?.work_start.slice(0, 5)}</span>, до <span className="text-[#F4631A]">16:00</span></p>
+                            <p className="text-white xl:text-[24px] text-[18px] font-[700]">Работает с <span className="text-[#F4631A]">{worker?.work_start.slice(0, 5)}</span>, до <span className="text-[#F4631A]">{worker?.work_end.slice(0, 5)}</span></p>
 
                             <p className="text-white xl:text-[24px] text-[18px] font-[700]">Сеанс длится:  <span className="text-[#F4631A]">{worker?.client_duration_minutes}</span> минут </p>
                         </div>
