@@ -14,7 +14,7 @@ type Props = {
 export default function Company_newWorkerModalWindow({ closseModal, setReload }: Props) {
     useNoScroll()
 
-    const [Error, setError] = useState<string>(" ")
+    const [Error, setError] = useState<string>("")
     const [proffession, setProffession] = useState<Category[]>([])
     const [panding, setPanding] = useState<boolean>(false)
     const [password2, setPassword2] = useState<string>("")
@@ -53,9 +53,8 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
                 closseModal()
                 setReload(prev => !prev)
             })
-            .catch(err => {
-                console.log(err)
-                setError("Ошибка при регистрации работника")
+            .catch(() => {
+                setError('')
             })
             .finally(() => {
                 setPanding(false)
@@ -109,7 +108,7 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
         setAftorization((prev) => ({ ...prev, phone: formatted }))
 
         if (value.length === 12) {
-            setError(" ")
+            setError("")
         }
     }
 
@@ -117,7 +116,7 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
 
     function changeEV(ev: ChangeEvent<HTMLInputElement>, key: string) {
         let value = ev.target.value
-        setError(' ')
+        setError('')
 
         if (key === 'username') {
             const isValid = /^[a-zA-Z0-9_]*$/.test(value)

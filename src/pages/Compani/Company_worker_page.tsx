@@ -8,6 +8,7 @@ import { API } from "../../axios/axios"
 import Company_worker_skeleton from "../../Skeleton/Company_worker_skeleton"
 import { useStore } from "../../state/globalState"
 import { useGet1Name } from "../../hooks/useGetIndustryName"
+import { useDebounce } from "../../hooks/useDebounce"
 
 type Props = {}
 
@@ -19,6 +20,7 @@ export default function Company_worker_page({ }: Props) {
 
     const { company } = useStore((state) => state);
     const [search, setSearch] = useSearchParams()
+    const debounche = useDebounce(searchInput, 500)
 
 
     const [workers, setWorkers] = useState<Workers | null>(null)
@@ -48,7 +50,7 @@ export default function Company_worker_page({ }: Props) {
         };
 
         getWorkers();
-    }, [company.data.company?.id, search, reload]);
+    }, [company.data.company?.id, search.get("page"), debounche, reload]);
 
 
 
@@ -65,10 +67,6 @@ export default function Company_worker_page({ }: Props) {
 
     const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
-        setSearch({
-            ...Object.fromEntries(search.entries()),
-            search: e.target.value,
-        })
     };
 
     async function onClickDelete(id: number) {
@@ -111,7 +109,7 @@ export default function Company_worker_page({ }: Props) {
             </div>
 
 
-            {!loading ?  <>
+            {!loading ? <>
                 <div className="lg:p-[40px] p-[10px]">
                     <div className="flex justify-between items-center border-b-[1px] border-[#E5E5E5] py-[12px]">
                         <h2 className="text-[#FFFFFF] lg:text-2xl text-[16px] font-bold">Список работников</h2>
@@ -151,8 +149,8 @@ export default function Company_worker_page({ }: Props) {
                     {workers?.next ? <img width={32} onClick={() => handlePage(workers?.next || "")} className="cursor-pointer" src="/Pagination/right.svg" alt="" /> : <img width={32} src="/Pagination/noRight.svg" alt="" />}
                 </div>}
             </>
-            :
-            <Company_worker_skeleton />}
+                :
+                <Company_worker_skeleton />}
         </div>
 
     )

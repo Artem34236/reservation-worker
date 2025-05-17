@@ -3,11 +3,12 @@ import P_H3_Link from "../../component/P_H3_Link"
 import User_workerModalWindow from "../../modalWindows/User_workerModalWindow"
 import { useParams, useSearchParams } from "react-router-dom"
 import { API } from "../../axios/axios"
-import { Companys, Dates, Free_slots, Worker } from "../../types/type"
+import { Category, Companys, Dates, Free_slots, Worker } from "../../types/type"
 import User_worker_page_skeleton from "../../Skeleton/User_worker_page_skeleton"
 import { useDate } from "../../hooks/useDate"
 import User_worker_time_sceleton from "../../Skeleton/User_worker_time_sceleton"
 import User_talonModalWindow from "../../modalWindows/User_talonModalWindow"
+import { useGet1Name } from "../../hooks/useGetIndustryName"
 
 type Props = {}
 
@@ -18,6 +19,7 @@ export default function User_worker_page({ }: Props) {
     const [worker, setWorker] = useState<Worker | null>(null);
     const [workerSlots, setWorkerSlots] = useState<Free_slots | null>(null);
     const [company, setCompany] = useState<Companys | null>(null);
+    const [profession, setProfession] = useState<Category[]>([])
     const [selectedTime, setSelectedTime] = useState<string | null>(null)
 
     const { CompanyId, WorkerId } = useParams<{ CompanyId: string, WorkerId: string }>();
@@ -42,13 +44,15 @@ export default function User_worker_page({ }: Props) {
             setIsLoading(true)
 
             try {
-                const [companyRes, workerRes] = await Promise.all([
+                const [companyRes, workerRes, professionRes] = await Promise.all([
                     API.get(`/companies/?id=${CompanyId}`),
-                    API.get(`/workers/${WorkerId}/`)
+                    API.get(`/workers/${WorkerId}/`),
+                    API.get(`/workers/professions/`)
                 ])
 
                 setCompany(companyRes.data)
                 setWorker(workerRes.data)
+                setProfession(professionRes.data)
 
             } catch (err) {
                 console.error("Ошибка при загрузке данных:", err)
@@ -108,7 +112,7 @@ export default function User_worker_page({ }: Props) {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
                             <P_H3_Link isEdit={false} p="Имя" h3={worker?.full_name || ''} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Номер" h3={worker?.phone || ''} link={'/edit'} />
-                            <P_H3_Link isEdit={false} p="Профессия" h3={worker?.profession.toString() || ''} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Профессия" h3={useGet1Name((worker?.id || 0), profession)} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Компания" h3={company?.results[0].name || ''} link={'/edit'} />
                         </div>
 
