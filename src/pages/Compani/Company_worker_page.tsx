@@ -9,6 +9,7 @@ import Company_worker_skeleton from "../../Skeleton/Company_worker_skeleton"
 import { useStore } from "../../state/globalState"
 import { useGet1Name } from "../../hooks/useGetIndustryName"
 import { useDebounce } from "../../hooks/useDebounce"
+import Company_editWorker from "../../modalWindows/Company_editWorker"
 
 type Props = {}
 
@@ -17,6 +18,8 @@ export default function Company_worker_page({ }: Props) {
     const [newWorker, setNewWorker] = useState<boolean>(false)
     const [searchInput, setSearchInput] = useState<string>("")
     const [reload, setReload] = useState<boolean>(false)
+    const [isEdit, setIsEdit] = useState<boolean>()
+    const [editWorkerId, setEditWorkerId] = useState<number>()
 
     const { company } = useStore((state) => state);
     const [search, setSearch] = useSearchParams()
@@ -83,6 +86,13 @@ export default function Company_worker_page({ }: Props) {
 
     }
 
+    function edit(id: number) {
+
+        setEditWorkerId(id)
+        setIsEdit(true)
+
+    }
+
 
     return (
         <div>
@@ -118,7 +128,7 @@ export default function Company_worker_page({ }: Props) {
 
                     <div>
                         <CardTop elements={['Имя', 'Телефон', 'Должность', 'Длительность сеанса', "Начало работы", "Конец работы"]} >
-                            <div className="lg:w-[40px] w-[25px]"></div>
+                            <div className="lg:w-[80px] w-[50px]"></div>
                         </CardTop>
                     </div>
 
@@ -127,9 +137,9 @@ export default function Company_worker_page({ }: Props) {
                         {workers?.results.map((item, index) =>
                             <Card key={index} elements={[item.full_name, item.phone, (useGet1Name(item.profession, proffession) || 'adsf'), (item.client_duration_minutes.toString() + ' мин'), item.work_start.slice(0, 5), item.work_end.slice(0, 5)]} >
                                 <div className="flex flex-col lg:flex-row items-center sm:gap-[40px] gap-[10px]">
-                                    {/* <Link to={'compani/worker/23/edit'}>
-                                    <img className="w-[20px] sm:min-w-[25px]" src="/Compani/Company_worker_page/Worker_edit.svg" alt="" />
-                                </Link> */}
+                                    <button onClick={() => edit(item.id)} className="cursor-pointer">
+                                        <img className="w-[20px] sm:min-w-[25px]" src="/Compani/Company_worker_page/Worker_edit.svg" alt="" />
+                                    </button>
 
                                     <button onClick={() => onClickDelete(item.id)} className="cursor-pointer">
                                         <img className="min-w-[20px] w-[20px] sm:min-w-[25px]" src="/Compani/Company_worker_page/Worker_deleate.svg" alt="" />
@@ -151,6 +161,8 @@ export default function Company_worker_page({ }: Props) {
             </>
                 :
                 <Company_worker_skeleton />}
+
+                {isEdit && <Company_editWorker id={editWorkerId || 0} setReload={setReload} closseModal={() => setIsEdit(false)}/>}
         </div>
 
     )

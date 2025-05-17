@@ -53,7 +53,7 @@ export default function User_workerModalWindow({ closseModal, selectedTime, open
                     closseModal()
                     setPending(false)
                     setTalon({
-                        ID: res.data.reservation_id,
+                        ID: res.data.ticket_number,
                         date: `${search.get('year')}-${search.get('month')}-${search.get('date')}`,
                         time: selectedTime || "",
                     })

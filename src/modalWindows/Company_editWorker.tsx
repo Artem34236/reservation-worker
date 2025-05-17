@@ -9,22 +9,23 @@ import Loading from "./Loading.tsx"
 type Props = {
     closseModal: () => void
     setReload: Dispatch<SetStateAction<boolean>>
+    id: number
 }
 
-export default function Company_newWorkerModalWindow({ closseModal, setReload }: Props) {
+export default function Company_editWorker({ closseModal, setReload, id }: Props) {
+
+
+
     useNoScroll()
 
     const [Error, setError] = useState<string>("")
     const [proffession, setProffession] = useState<Category[]>([])
     const [panding, setPanding] = useState<boolean>(false)
-    const [password2, setPassword2] = useState<string>("")
 
     const [aug, setAftorization] = useState({
         full_name: "",
         phone: "",
-        username: "",
         profession: '',
-        password: '',
         client_duration_minutes: '',
         work_start: '',
         work_end: ''
@@ -41,14 +42,9 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
             return
         }
 
-        if (aug.password !== password2) {
-            setError("Пароли не совпадают");
-            return;
-        }
-
 
         setPanding(true)
-        await API.post("/workers/add/", aug)
+        await API.patch(`/workers/${id}/update-delete/`, aug)
             .then(() => {
                 closseModal()
                 setReload(prev => !prev)
@@ -63,15 +59,11 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
         setAftorization({
             full_name: "",
             phone: "",
-            username: "",
             profession: '',
-            password: '',
             client_duration_minutes: '',
             work_start: '',
             work_end: ''
         })
-
-        setPassword2("")
 
     }
 
@@ -80,13 +72,15 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
 
         async function getProffession() {
             setPanding(true)
-            await API.get("/workers/professions/")
-                .then(res => {
-                    setProffession(res.data)
-                })
-                .finally(() => {
-                    setPanding(false)
-                })
+            const [workerRes, professionRes] = await Promise.all([
+                API.get(`/workers/${id}/`),
+                API.get(`/workers/professions/`)
+            ])
+            setProffession(professionRes.data)
+            setAftorization(workerRes.data)
+
+            setPanding(false)
+
         }
         getProffession()
 
@@ -145,13 +139,6 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
 
                 <div className="flex flex-col gap-[20px] lg:flex-row max-w-[800px] flex-wrap justify-center">
 
-                    <Input
-                        value={aug.username}
-                        onChange={(ev) => changeEV(ev, "username")}
-                        img="/Register/Work_type.svg"
-                        placeholder="Логин (en)"
-                        type="text"
-                    />
 
                     <Input
                         value={aug.full_name}
@@ -172,7 +159,7 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
                     <Input
                         value={aug.work_start.slice(0, 5)}
                         onChange={(ev) => changeEV(ev, "work_start")}
-                        img="/Compani/"
+                        img="/Compani/Company_modal_window/Start_time.svg"
                         placeholder="Начало работы"
                         type="time"
                     />
@@ -213,25 +200,6 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
                         min={1}
                         max={120}
                     />
-
-                    <Input
-                        isRequired={true}
-                        value={aug.password}
-                        onChange={(ev) => changeEV(ev, "password")}
-                        img="/Register/Pass.svg"
-                        placeholder="Пароль"
-                        type="text"
-                    />
-
-                    <Input
-                        isRequired={true}
-                        value={password2}
-                        onChange={(ev) => setPassword2(ev.target.value)}
-                        img="/Register/Pass.svg"
-                        placeholder="Повторить пароль"
-                        type="text"
-                    />
-
 
                 </div>
 
