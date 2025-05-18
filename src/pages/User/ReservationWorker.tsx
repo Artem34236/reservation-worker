@@ -9,24 +9,36 @@ import { useDebounce } from "../../hooks/useDebounce";
 
 export default function ReservationWorker() {
     const [sphere, setSphere] = useState("");
-    const [searchInput, setSearchInput] = useState<string>("");
 
 
     const [companys, setCompanys] = useState<Companys | null>(null);
     const [industry, setIndustry] = useState<Category[] | null>(null);
 
     const [search, setSearch] = useSearchParams();
+    const [searchInput, setSearchInput] = useState<string>(search.get('search') || '');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const debounche = useDebounce(searchInput, 500)
 
 
     useEffect(() => {
+        const currentSearch = search.get("search") || "";
+        if (debounche !== currentSearch) {
+            setSearch((prev) => ({
+                ...Object.fromEntries(prev.entries()),
+                search: debounche,
+                page: "1",
+            }));
+        }
+    }, [debounche]);
+
+    useEffect(() => {
         async function getCompanys() {
             setIsLoading(true);
+
             try {
                 const [companyRes, industryRes] = await Promise.all([
-                    API.get(`/companies/?page=${search.get('page') || 1}&industry=${search.get('industry') || ''}&search=${search.get('search') || ''}`),
+                    API.get(`/companies/?page=${search.get('page') || 1}&industry=${search.get('industry') || ''}&search=${debounche}`),
                     API.get(`/industries/`)
                 ]);
 

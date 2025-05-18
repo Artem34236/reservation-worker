@@ -10,12 +10,16 @@ export default function Reservation({ }: Props) {
 
     const { worker } = useStore()
     const [reservation, setReservations] = useState<ReservationData[]>([])
+    const data = new Date()
+    const formattedDate = data.toISOString().split("T")[0];
 
     useEffect(() => {
 
         const worekerId = worker.data.worker?.id;
-        
+
         if (!worekerId) return;
+
+        console.log(formattedDate);
 
         async function getReservation() {
             try {
@@ -41,12 +45,12 @@ export default function Reservation({ }: Props) {
                 </div>
 
                 <div>
-                    <CardTop elements={['Имя', 'Номер', 'Талон', 'Время прихода', 'Комментарий']} />
+                    <CardTop elements={['Имя', 'Номер', 'Талон', 'Время прихода', 'Комментарий', 'Дата']} />
                 </div>
 
                 {reservation.map((item, index) => (
                     <div key={index} className="flex flex-col gap-[20px] mr-3">
-                        <Card elements={[item.full_name, item.phone, item.ticket_number, item.time.slice(0, 5), item.comment || "Комментария нет"]} />
+                        <Card elements={[item.full_name, item.phone, item.ticket_number, item.time.slice(0, 5), item.comment || "Комментария нет", item.date]} />
                     </div>
                 ))}
 

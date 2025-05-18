@@ -19,10 +19,10 @@ export default function User_company_page({ }: Props) {
   const [proffession, setProffession] = useState<Category[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [searchInput, setSearchInput] = useState<string>("");
 
   const { CompanyId } = useParams<{ CompanyId: string }>();
   const [search, setSearch] = useSearchParams();
+  const [searchInput, setSearchInput] = useState<string>(search.get('search') || '');
   const debounche = useDebounce(searchInput, 500)
 
 
@@ -44,7 +44,20 @@ export default function User_company_page({ }: Props) {
     setSearchInput(e.target.value);
   };
 
-  
+
+  useEffect(() => {
+    const currentSearch = search.get("search") || "";
+    if (debounche !== currentSearch) {
+      setSearch((prev) => ({
+        ...Object.fromEntries(prev.entries()),
+        search: debounche,
+        page: "1",
+      }));
+    }
+  }, [debounche]);
+
+
+
   useEffect(() => {
     if (!CompanyId) return;
 
@@ -55,7 +68,7 @@ export default function User_company_page({ }: Props) {
         const [companyRes, workerRes, industryRes, proffessionRes] = await Promise.all([
           API.get(`/companies/?id=${CompanyId}`),
           API.get(
-            `/companies/${CompanyId}/workers/?page=${search.get("page") || 1}&profession=${search.get("profession") || ""}&search=${search.get("search") || ""}`
+            `/companies/${CompanyId}/workers/?page=${search.get("page") || 1}&profession=${search.get("profession") || ""}&search=${debounche}`
           ),
           API.get(`/industries/`),
           API.get(`/workers/professions/`)

@@ -42,10 +42,20 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
         }
 
         if (aug.password !== password2) {
-            setError("Пароли не совпадают");
-            return;
+            setError("Пароли не совпадают")
+            return
         }
 
+        const [startHour, startMin] = aug.work_start.split(':').map(Number)
+        const [endHour, endMin] = aug.work_end.split(':').map(Number)
+
+        const start = startHour * 60 + startMin
+        const end = endHour * 60 + endMin
+
+        if (start >= end) {
+            setError("Время начала работы не может быть позже или равно времени окончания.")
+            return
+        }
 
         setPanding(true)
         await API.post("/workers/add/", aug)
@@ -72,7 +82,6 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
         })
 
         setPassword2("")
-
     }
 
 
@@ -172,7 +181,7 @@ export default function Company_newWorkerModalWindow({ closseModal, setReload }:
                     <Input
                         value={aug.work_start.slice(0, 5)}
                         onChange={(ev) => changeEV(ev, "work_start")}
-                        img="/Compani/"
+                        img="/Compani/Company_modal_window/Start_time.svg"
                         placeholder="Начало работы"
                         type="time"
                     />

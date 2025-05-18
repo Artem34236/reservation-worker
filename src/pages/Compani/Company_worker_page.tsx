@@ -16,19 +16,30 @@ type Props = {}
 export default function Company_worker_page({ }: Props) {
 
     const [newWorker, setNewWorker] = useState<boolean>(false)
-    const [searchInput, setSearchInput] = useState<string>("")
     const [reload, setReload] = useState<boolean>(false)
     const [isEdit, setIsEdit] = useState<boolean>()
     const [editWorkerId, setEditWorkerId] = useState<number>()
 
     const { company } = useStore((state) => state);
     const [search, setSearch] = useSearchParams()
+    const [searchInput, setSearchInput] = useState<string>(search.get('search') || '')
     const debounche = useDebounce(searchInput, 500)
 
 
     const [workers, setWorkers] = useState<Workers | null>(null)
     const [proffession, setProffession] = useState<Category[] | null>(null)
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const currentSearch = search.get("search") || "";
+        if (debounche !== currentSearch) {
+            setSearch((prev) => ({
+                ...Object.fromEntries(prev.entries()),
+                search: debounche,
+                page: "1",
+            }));
+        }
+    }, [debounche]);
 
 
     useEffect(() => {
@@ -38,11 +49,13 @@ export default function Company_worker_page({ }: Props) {
 
         const getWorkers = async () => {
             setLoading(true);
+
             try {
                 const [workerRes, proffessionRes] = await Promise.all([
-                    API.get(`/companies/${company.data.company?.id}/workers/?page=${search.get('page') || 1}&search=${search.get('search') || ''}`),
+                    API.get(`/companies/${company.data.company?.id}/workers/?page=${search.get('page') || 1}&search=${debounche}`),
                     API.get(`/workers/professions/`)
                 ])
+
                 setWorkers(workerRes.data);
                 setProffession(proffessionRes.data);
             } catch (err) {
@@ -162,7 +175,7 @@ export default function Company_worker_page({ }: Props) {
                 :
                 <Company_worker_skeleton />}
 
-                {isEdit && <Company_editWorker id={editWorkerId || 0} setReload={setReload} closseModal={() => setIsEdit(false)}/>}
+            {isEdit && <Company_editWorker id={editWorkerId || 0} setReload={setReload} closseModal={() => setIsEdit(false)} />}
         </div>
 
     )

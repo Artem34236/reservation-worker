@@ -42,6 +42,17 @@ export default function Company_editWorker({ closseModal, setReload, id }: Props
             return
         }
 
+        
+        const [startHour, startMin] = aug.work_start.split(':').map(Number)
+        const [endHour, endMin] = aug.work_end.split(':').map(Number)
+
+        const start = startHour * 60 + startMin
+        const end = endHour * 60 + endMin
+
+        if (start >= end) {
+            setError("Время начала работы не может быть позже или равно времени окончания.")
+            return
+        }
 
         setPanding(true)
         await API.patch(`/workers/${id}/update-delete/`, aug)
@@ -64,7 +75,6 @@ export default function Company_editWorker({ closseModal, setReload, id }: Props
             work_start: '',
             work_end: ''
         })
-
     }
 
 
