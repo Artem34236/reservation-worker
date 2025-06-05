@@ -22,7 +22,7 @@ export default function Home({ }: Props) {
 
           <div className="flex group items-center justify-center sm:justify-start sm:gap-[30px] gap-[15px] max-w-full sm:max-w-max">
 
-            <Orange_Link to={aftoryzationTipe === 'user' ? `/${aftoryzationTipe}/company/?page=1` :`/${aftoryzationTipe}/acc`} text="Начнём?" className="bg-[#1B1429]! py-[6px]! text-[#FFFFFF]! sm:text-[18px]! text-[16px]! font-[700] rounded-3xl! sm:px-[65px] px-[30px] w-auto!" />
+            <Orange_Link to={aftoryzationTipe === 'user' ? `/${aftoryzationTipe}/company/?page=1` : aftoryzationTipe === 'company' ? `/${aftoryzationTipe}/worker` : `/${aftoryzationTipe}/reservation`} text="Начнём?" className="bg-[#1B1429]! py-[6px]! text-[#FFFFFF]! sm:text-[18px]! text-[16px]! font-[700] rounded-3xl! sm:px-[65px] px-[30px] w-auto!" />
             <img className="group-hover:translate-x-3.5 transition duration-300 lg:w-max sm:w-[30px] w-[20px]" src="/Home/Strelka.svg" alt="" />
 
           </div>

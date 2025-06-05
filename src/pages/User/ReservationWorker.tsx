@@ -109,6 +109,7 @@ export default function ReservationWorker() {
                             {industry?.map((item) => (
                                 <option key={item.id} value={item.id}>{item.name}</option>
                             ))}
+                            <option value="">Все</option>
                         </select>
                     </div>
                 </form>

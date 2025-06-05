@@ -161,6 +161,7 @@ export default function User_company_page({ }: Props) {
                       {item.name}
                     </option>
                   ))}
+                  <option value="">Все</option>
                 </select>
               </div>
             </form>

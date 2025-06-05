@@ -64,6 +64,7 @@ export default function User_worker_page({ }: Props) {
 
     }, [CompanyId, WorkerId])
 
+    
 
     useEffect(() => {
 
@@ -94,7 +95,6 @@ export default function User_worker_page({ }: Props) {
         setIsOnclick(true)
     }
 
-
     return (
         isLoading ? <User_worker_page_skeleton />
             :
@@ -112,7 +112,7 @@ export default function User_worker_page({ }: Props) {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[40px]">
                             <P_H3_Link isEdit={false} p="Имя" h3={worker?.full_name || ''} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Номер" h3={worker?.phone || ''} link={'/edit'} />
-                            <P_H3_Link isEdit={false} p="Профессия" h3={useGet1Name((worker?.id || 0), profession)} link={'/edit'} />
+                            <P_H3_Link isEdit={false} p="Профессия" h3={useGet1Name((worker?.profession || 0), profession)} link={'/edit'} />
                             <P_H3_Link isEdit={false} p="Компания" h3={company?.results[0].name || ''} link={'/edit'} />
                         </div>
 
